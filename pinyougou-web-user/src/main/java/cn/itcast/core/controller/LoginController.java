@@ -24,6 +24,7 @@ public class LoginController {
         //1:当前线程中的SecurityContext
         String name = SecurityContextHolder.getContext().getAuthentication().getName();
         System.out.println(111111);
+        System.out.println(111111);
         Map<String,Object> map = new HashMap<>();
         map.put("loginName",name);
        // map.put("curTime",new Date());
