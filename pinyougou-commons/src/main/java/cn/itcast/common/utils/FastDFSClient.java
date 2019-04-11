@@ -24,7 +24,7 @@ public class FastDFSClient {
 		if (conf.contains("classpath:")) {
 			conf = conf.replace("classpath:", this.getClass().getResource("/").getPath());
 		}
-		ClientGlobal.init(conf);//conf要求是全路径
+		ClientGlobal.init(conf);//conf要求是全路径//conf要求是全路径
 
 
 		trackerClient = new TrackerClient();
