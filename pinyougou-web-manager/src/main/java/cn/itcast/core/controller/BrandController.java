@@ -29,8 +29,7 @@ public class BrandController {
     //查询所有品牌
     @RequestMapping("/findAll")
     public List<Brand> findAll(){
-
-
+        System.out.println("测试代码...................................");
         return brandService.findAll();
 
     }
