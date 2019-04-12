@@ -7,6 +7,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.List;
+
 /**
  * 商家管理
  */
@@ -47,5 +49,14 @@ public class SellerServiceImpl implements  SellerService {
     public Seller findBySellerId(String username) {
 
         return sellerDao.selectByPrimaryKey(username);
+    }
+
+    /**
+     * 查询上级的总数
+     * @return
+     */
+    @Override
+    public int findCount() {
+        return sellerDao.findCount();
     }
 }

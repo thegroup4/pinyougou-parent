@@ -33,4 +33,8 @@ app.service('sellerService',function($http){
 	this.updateStatus = function(sellerId,status){
 		return $http.get('../seller/updateStatus.do?sellerId='+sellerId+"&status="+status);
 	}
+
+    this.findCount = function(){
+        return $http.get('../seller/findCount.do');
+    }
 });

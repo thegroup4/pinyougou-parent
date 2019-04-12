@@ -6,4 +6,11 @@ public interface SellerService {
     void add(Seller seller);
 
     Seller findBySellerId(String username);
+
+
+    /**
+     * 查询商家总数
+     */
+    int findCount();
+
 }

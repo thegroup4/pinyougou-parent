@@ -4,6 +4,7 @@ import cn.itcast.core.pojo.seller.Seller;
 import cn.itcast.core.pojo.seller.SellerQuery;
 import java.util.List;
 import org.apache.ibatis.annotations.Param;
+import org.apache.ibatis.annotations.Select;
 
 public interface SellerDao {
     int countByExample(SellerQuery example);
@@ -27,4 +28,7 @@ public interface SellerDao {
     int updateByPrimaryKeySelective(Seller record);
 
     int updateByPrimaryKey(Seller record);
+
+    @Select("select count(1) from tb_seller ")
+    int findCount();
 }

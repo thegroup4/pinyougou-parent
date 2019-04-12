@@ -87,4 +87,13 @@ app.controller('sellerController' ,function($scope,$controller   ,sellerService)
 			}
 		});
 	}
+
+
+    $scope.findCount=function(){
+        sellerService.findCount().success(
+            function(response){
+                $scope.sellerNum=response;
+            }
+        );
+    }
 });	
