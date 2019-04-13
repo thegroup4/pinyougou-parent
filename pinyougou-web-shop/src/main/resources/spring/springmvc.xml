@@ -18,6 +18,7 @@
 	        <array>
 	          <value>WriteMapNullValue</value>
 	          <value>WriteDateUseDateFormat</value>
+			<value>DisableCircularReferenceDetect</value>
 	        </array>
 	      </property>
 	    </bean>

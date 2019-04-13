@@ -54,5 +54,6 @@ public class TypeTemplateController {
     public TypeTemplate findOne(Long id){
         return typeTemplateService.findOne(id);
     }
-
+    //模板分页条件查询
+    //return $http.post('../typeTemplate/search.do?page='+page+"&rows="+rows, searchEntity);
 }

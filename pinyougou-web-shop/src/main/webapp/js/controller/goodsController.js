@@ -117,6 +117,7 @@ app.controller('goodsController' ,function($scope,$controller,$location,typeTemp
 
 	//搜索
 	$scope.search=function(page,rows){
+
 		goodsService.search(page,rows,$scope.searchEntity).success(
 			function(response){
 				$scope.list=response.rows;

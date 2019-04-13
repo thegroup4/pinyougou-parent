@@ -1,7 +1,6 @@
 package cn.itcast.core.service;
 
 import cn.itcast.core.pojo.seller.Seller;
-import com.alibaba.dubbo.config.annotation.Reference;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.User;
@@ -16,9 +15,8 @@ import java.util.Set;
  * 安全框架 自定义实现类
  * 从数据库获取用户名信息
  */
+
 public class UserDetailServiceImpl implements UserDetailsService{
-
-
 
     private SellerService sellerService;
     public void setSellerService(SellerService sellerService) {
