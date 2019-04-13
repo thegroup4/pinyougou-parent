@@ -22,8 +22,8 @@ public class OrderController {
         String name = SecurityContextHolder.getContext().getAuthentication().getName();
         PageResult pageResult = orderVoService.findPage(page, rows,name);
         //禁止循环引用
-        String s = JSON.toJSONString(pageResult, SerializerFeature.DisableCircularReferenceDetect);
-        System.out.println(s);
+//        String s = JSON.toJSONString(pageResult, SerializerFeature.DisableCircularReferenceDetect);
+//        System.out.println(s);
         //把json再转化为对象
         //PageResult result = JSON.parseObject(s, PageResult.class);
         return pageResult;
