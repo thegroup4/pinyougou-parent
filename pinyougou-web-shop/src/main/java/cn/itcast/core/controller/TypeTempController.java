@@ -1,6 +1,6 @@
 package cn.itcast.core.controller;
 
-import cn.itcast.core.pojo.template.TypeTemplate;
+import cn.itcast.core.pojo.template.TypeTemplateCheck;
 import cn.itcast.core.service.TypeTemplateService;
 import com.alibaba.dubbo.config.annotation.Reference;
 import entity.PageResult;
@@ -17,24 +17,23 @@ import java.util.Map;
  */
 @SuppressWarnings("all")
 @RestController
-@RequestMapping("/typeTemplate")
-public class TypeTemplateController {
-
+@RequestMapping("/typeTemp")
+public class TypeTempController {
 
     @Reference
     private TypeTemplateService typeTemplateService;
     //查询分页对象 有条件
     @RequestMapping("/search")
-    public PageResult search(Integer page, Integer rows, @RequestBody TypeTemplate tt){
+    public PageResult search(Integer page, Integer rows, @RequestBody TypeTemplateCheck ttc){
 
-        return typeTemplateService.search(page,rows,tt);
+        return typeTemplateService.search1(page,rows,ttc);
 
     }
     //添加
     @RequestMapping("/add")
-    public Result add(@RequestBody TypeTemplate tt){
+    public Result add(@RequestBody TypeTemplateCheck ttc){
         try {
-            typeTemplateService.add(tt);
+            typeTemplateService.add1(ttc);
             return new Result(true,"成功");
         } catch (Exception e) {
             e.printStackTrace();
@@ -43,9 +42,9 @@ public class TypeTemplateController {
     }
     //添加
     @RequestMapping("/update")
-    public Result update(@RequestBody TypeTemplate tt){
+    public Result update(@RequestBody TypeTemplateCheck ttc){
         try {
-            typeTemplateService.update(tt);
+            typeTemplateService.update1(ttc);
             return new Result(true,"成功");
         } catch (Exception e) {
             e.printStackTrace();
@@ -54,13 +53,14 @@ public class TypeTemplateController {
     }
     //查询一个模板
     @RequestMapping("/findOne")
-    public TypeTemplate findOne(Long id){
-        return typeTemplateService.findOne(id);
+    public TypeTemplateCheck findOne(Long id){
+        return typeTemplateService.findOne1(id);
+    }
+    //根据模板ID查询规格List<Map> 每一个Map要有规格选项结果集
+    @RequestMapping("/findBySpecList")
+    public List<Map> findBySpecList(Long id){
+        return typeTemplateService.findBySpecList1(id);
     }
 
-    //根据模版id查询规格list<map> 每一个map要有规格选项结果集
-    @RequestMapping("findBySpecList")
-    public List<Map> findBySpecList(Long id){
-        return typeTemplateService.findBySpecList(id);
-    }
+
 }

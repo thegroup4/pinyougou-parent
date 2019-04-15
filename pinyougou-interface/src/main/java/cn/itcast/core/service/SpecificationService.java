@@ -12,18 +12,42 @@ import java.util.Map;
 public interface SpecificationService {
     PageResult search(Integer page, Integer rows, Specification specification);
 
-    PageResult search(Integer page, Integer rows);
+    PageResult search1(Integer page, Integer rows);
+    void add1(SpecificationCheckVo specificationCheckVo);
 
-    void add(SpecificationCheckVo specificationCheckVo);
+    void add(SpecificationVo specificationVo);
 
 
+    SpecificationCheckVo findOne1(Long id);
+    SpecificationVo findOne(Long id);
 
-
-    SpecificationCheckVo findOne(Long id);
-
-    void update(SpecificationCheckVo specificationCheckVo);
+    void update1(SpecificationCheckVo specificationCheckVo);
+    void update(SpecificationVo specificationVo);
 
     List<Map> selectOptionList();
+    List<Map> selectOptionList1();
 
+
+    /*
+     * 规格审核查询所有并分页查询
+     * */
+    PageResult searchStatus(Integer page, Integer rows, SpecificationCheck specificationCheck);
+
+    /*
+     * 规格查询
+     * */
+    List<SpecificationCheck> findStatusAll();
+
+    /**
+     * 更改状态
+     *
+     * @param ids
+     * @param status
+     */
+    void updateStatus(Long[] ids, String status);
+
+    void deleteStatus(Long id);
+
+    void addspecification(Specification specification);
 
 }

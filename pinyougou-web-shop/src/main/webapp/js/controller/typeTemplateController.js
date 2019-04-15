@@ -1,11 +1,11 @@
 //控制层 
-app.controller('typeTemplateController' ,function($scope,$controller,brandService ,specService,typeTemplateService){
+app.controller('typeTemplateController' ,function($scope,$controller,brandService ,specService,typeTempService){
 	
 	$controller('baseController',{$scope:$scope});//继承
 	
     //读取列表数据绑定到表单中  
 	$scope.findAll=function(){
-		typeTemplateService.findAll().success(
+		typeTempService.findAll1().success(
 			function(response){
 				$scope.list=response;
 			}			
@@ -14,7 +14,7 @@ app.controller('typeTemplateController' ,function($scope,$controller,brandServic
 	
 	//分页
 	$scope.findPage=function(page,rows){			
-		typeTemplateService.findPage(page,rows).success(
+		typeTempService.findPage1(page,rows).success(
 			function(response){
 				$scope.list=response.rows;	
 				$scope.paginationConf.totalItems=response.total;//更新总记录数
@@ -24,7 +24,7 @@ app.controller('typeTemplateController' ,function($scope,$controller,brandServic
 	
 	//查询实体 
 	$scope.findOne=function(id){				
-		typeTemplateService.findOne(id).success(
+		typeTempService.findOne1(id).success(
 			function(response){
 				$scope.entity= response;	
 				// eval()   JSON.parse();   
@@ -41,9 +41,9 @@ app.controller('typeTemplateController' ,function($scope,$controller,brandServic
 	$scope.save=function(){				
 		var serviceObject;//服务层对象  				
 		if($scope.entity.id!=null){//如果有ID
-			serviceObject=typeTemplateService.update( $scope.entity ); //修改  
+			serviceObject=typeTempService.update1( $scope.entity ); //修改
 		}else{
-			serviceObject=typeTemplateService.add( $scope.entity  );//增加 
+			serviceObject=typeTempService.add1( $scope.entity  );//增加
 		}				
 		serviceObject.success(
 			function(response){
@@ -61,7 +61,7 @@ app.controller('typeTemplateController' ,function($scope,$controller,brandServic
 	//批量删除 
 	$scope.dele=function(){			
 		//获取选中的复选框			
-		typeTemplateService.dele( $scope.selectIds ).success(
+		typeTempService.dele1( $scope.selectIds ).success(
 			function(response){
 				if(response.flag){
 					$scope.reloadList();//刷新列表
@@ -75,7 +75,7 @@ app.controller('typeTemplateController' ,function($scope,$controller,brandServic
 	
 	//搜索
 	$scope.search=function(page,rows){			
-		typeTemplateService.search(page,rows,$scope.searchEntity).success(
+		typeTempService.search1(page,rows,$scope.searchEntity).success(
 			function(response){
 				$scope.list=response.rows;	
 				$scope.paginationConf.totalItems=response.total;//更新总记录数

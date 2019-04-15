@@ -25,14 +25,14 @@ public class SpecController {
 
     @RequestMapping("/search")
     public PageResult search(Integer page,Integer rows){
-        PageResult search = specificationService.search(page, rows);
+        PageResult search = specificationService.search1(page, rows);
         return search;
     }
     //规格添加
     @RequestMapping("/add")
     public Result add(@RequestBody SpecificationCheckVo specificationCheckVo){
         try {
-            specificationService.add(specificationCheckVo);
+            specificationService.add1(specificationCheckVo);
             return new Result(true,"成功");
         } catch (Exception e) {
             e.printStackTrace();
@@ -51,9 +51,9 @@ public class SpecController {
     }*/
     //规格修改
     @RequestMapping("/update")
-    public Result update(@RequestBody SpecificationCheckVo specificationCheckVo){
+    public Result update1(@RequestBody SpecificationCheckVo specificationCheckVo){
         try {
-            specificationService.update(specificationCheckVo);
+            specificationService.update1(specificationCheckVo);
             return new Result(true,"成功");
         } catch (Exception e) {
             e.printStackTrace();
@@ -63,12 +63,13 @@ public class SpecController {
     //查询一个规格包装对象  规格  规格选项
     @RequestMapping("/findOne")
     public SpecificationCheckVo findOne(Long id){
-        return specificationService.findOne(id);
+        return specificationService.findOne1(id);
     }
 
     //查询所有规格  返回值 List<Map
     @RequestMapping("/selectOptionList")
     public List<Map> selectOptionList(){
-        return specificationService.selectOptionList();
+        return specificationService.selectOptionList1();
     }
+
 }
