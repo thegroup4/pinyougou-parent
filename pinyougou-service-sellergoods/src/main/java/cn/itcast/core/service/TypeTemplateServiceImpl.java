@@ -1,10 +1,12 @@
 package cn.itcast.core.service;
 
 import cn.itcast.core.dao.specification.SpecificationOptionDao;
+import cn.itcast.core.dao.template.TypeTemplateCheckDao;
 import cn.itcast.core.dao.template.TypeTemplateDao;
 import cn.itcast.core.pojo.specification.SpecificationOption;
 import cn.itcast.core.pojo.specification.SpecificationOptionQuery;
 import cn.itcast.core.pojo.template.TypeTemplate;
+import cn.itcast.core.pojo.template.TypeTemplateCheck;
 import com.alibaba.dubbo.config.annotation.Service;
 import com.alibaba.fastjson.JSON;
 import com.fasterxml.jackson.databind.jsontype.TypeSerializer;
@@ -35,14 +37,16 @@ public class TypeTemplateServiceImpl implements TypeTemplateService {
     @Autowired
     private SpecificationOptionDao specificationOptionDao;
     @Autowired
-    private RedisTemplate redisTemplate;
+    private TypeTemplateCheckDao typeTemplateCheckDao;
+/*    @Autowired
+    private RedisTemplate redisTemplate;*/
 
     //查询分页对象
     @Override
     public PageResult search(Integer page, Integer rows, TypeTemplate tt) {
 
         //查询的所有模板结果集
-        List<TypeTemplate> typeTemplates = typeTemplateDao.selectByExample(null);
+/*        List<TypeTemplateCheck> typeTemplates = typeTemplateCheckDao.selectByExample(null);
         for (TypeTemplate typeTemplate : typeTemplates) {
 
 
@@ -55,32 +59,29 @@ public class TypeTemplateServiceImpl implements TypeTemplateService {
             List<Map> specList = findBySpecList(typeTemplate.getId());
             redisTemplate.boundHashOps("specList").put(typeTemplate.getId(),specList);
 
-        }
-
-
-
-
+        }*/
         PageHelper.startPage(page,rows);
-        Page<TypeTemplate> p = (Page<TypeTemplate>) typeTemplateDao.selectByExample(null);
+        Page<TypeTemplateCheck> p = (Page<TypeTemplateCheck>) typeTemplateCheckDao.selectByExample(null);
         return new PageResult(p.getTotal(),p.getResult());
     }
 
     //添加
     @Override
-    public void add(TypeTemplate tt) {
-        typeTemplateDao.insertSelective(tt);
+    public void add(TypeTemplateCheck ttc) {
+        ttc.setTemplateStatus("0");
+        typeTemplateCheckDao.insertSelective(ttc);
     }
 
     //查询一个模板
     @Override
-    public TypeTemplate findOne(Long id) {
-        return typeTemplateDao.selectByPrimaryKey(id);
+    public TypeTemplateCheck findOne(Long id) {
+        return typeTemplateCheckDao.selectByPrimaryKey(id);
     }
 
     //修改
     @Override
-    public void update(TypeTemplate tt) {
-        typeTemplateDao.updateByPrimaryKeySelective(tt);
+    public void update(TypeTemplateCheck ttc) {
+        typeTemplateCheckDao.updateByPrimaryKeySelective(ttc);
     }
 
     

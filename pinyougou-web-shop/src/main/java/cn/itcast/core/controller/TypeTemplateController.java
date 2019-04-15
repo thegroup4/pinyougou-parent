@@ -1,6 +1,7 @@
 package cn.itcast.core.controller;
 
 import cn.itcast.core.pojo.template.TypeTemplate;
+import cn.itcast.core.pojo.template.TypeTemplateCheck;
 import cn.itcast.core.service.TypeTemplateService;
 import com.alibaba.dubbo.config.annotation.Reference;
 import entity.PageResult;
@@ -20,7 +21,6 @@ import java.util.Map;
 @RequestMapping("/typeTemplate")
 public class TypeTemplateController {
 
-
     @Reference
     private TypeTemplateService typeTemplateService;
     //查询分页对象 有条件
@@ -32,9 +32,9 @@ public class TypeTemplateController {
     }
     //添加
     @RequestMapping("/add")
-    public Result add(@RequestBody TypeTemplate tt){
+    public Result add(@RequestBody TypeTemplateCheck ttc){
         try {
-            typeTemplateService.add(tt);
+            typeTemplateService.add(ttc);
             return new Result(true,"成功");
         } catch (Exception e) {
             e.printStackTrace();
@@ -43,9 +43,9 @@ public class TypeTemplateController {
     }
     //添加
     @RequestMapping("/update")
-    public Result update(@RequestBody TypeTemplate tt){
+    public Result update(@RequestBody TypeTemplateCheck ttc){
         try {
-            typeTemplateService.update(tt);
+            typeTemplateService.update(ttc);
             return new Result(true,"成功");
         } catch (Exception e) {
             e.printStackTrace();
@@ -54,7 +54,7 @@ public class TypeTemplateController {
     }
     //查询一个模板
     @RequestMapping("/findOne")
-    public TypeTemplate findOne(Long id){
+    public TypeTemplateCheck findOne(Long id){
         return typeTemplateService.findOne(id);
     }
     //根据模板ID查询规格List<Map> 每一个Map要有规格选项结果集
