@@ -1,11 +1,11 @@
 //服务层
 app.service('typeTemplateService',function($http){
-	    	
+
 	//读取列表数据绑定到表单中
 	this.findAll=function(){
-		return $http.get('../typeTemplate/findAll.do');		
+		return $http.get('../typeTemplate/findAll.do');
 	}
-	//分页 
+	//分页
 	this.findPage=function(page,rows){
 		return $http.get('../typeTemplate/findPage.do?page='+page+'&rows='+rows);
 	}
@@ -13,11 +13,11 @@ app.service('typeTemplateService',function($http){
 	this.findOne=function(id){
 		return $http.get('../typeTemplate/findOne.do?id='+id);
 	}
-	//增加 
+	//增加
 	this.add=function(entity){
 		return  $http.post('../typeTemplate/add.do',entity );
 	}
-	//修改 
+	//修改
 	this.update=function(entity){
 		return  $http.post('../typeTemplate/update.do',entity );
 	}
@@ -28,5 +28,14 @@ app.service('typeTemplateService',function($http){
 	//搜索
 	this.search=function(page,rows,searchEntity){
 		return $http.post('../typeTemplate/search.do?page='+page+"&rows="+rows, searchEntity);
-	}    	
+	}
+
+    //审核
+    this.searchStatus = function (page, rows, searchEntity) {
+        return $http.post('../typeTemplateStatus/search.do?page=' + page + "&rows=" + rows, searchEntity);
+    }
+    //修改状态
+    this.updateStatus = function (ids, status) {
+        return $http.post('../typeTemplateStatus/updateStatus.do?ids=' + ids + "&status=" + status);
+    }
 });

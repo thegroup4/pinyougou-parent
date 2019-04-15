@@ -3,19 +3,21 @@ package cn.itcast.core.service;
 import cn.itcast.core.dao.specification.SpecificationCheckDao;
 import cn.itcast.core.dao.specification.SpecificationDao;
 import cn.itcast.core.dao.specification.SpecificationOptionDao;
-import cn.itcast.core.pojo.good.BrandQuery;
+
+
 import cn.itcast.core.pojo.specification.Specification;
 import cn.itcast.core.pojo.specification.SpecificationCheck;
 import cn.itcast.core.pojo.specification.SpecificationOption;
 import cn.itcast.core.pojo.specification.SpecificationOptionQuery;
 import com.alibaba.dubbo.config.annotation.Service;
+
 import com.github.pagehelper.Page;
 import com.github.pagehelper.PageHelper;
 import entity.PageResult;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.transaction.annotation.Transactional;
 import vo.SpecificationCheckVo;
-import vo.SpecificationVo;
+
 
 import java.util.List;
 import java.util.Map;
@@ -33,16 +35,17 @@ public class SpecificationServiceImpl implements SpecificationService {
     private SpecificationOptionDao specificationOptionDao;
     @Autowired
     private SpecificationCheckDao specificationCheckDao;
+
     //查询分页 有条件
     @Override
     public PageResult search(Integer page, Integer rows, Specification specification) {
         //插件
-        PageHelper.startPage(page,rows);
+        PageHelper.startPage(page, rows);
 
         Page<Specification> p = (Page<Specification>) specificationDao.selectByExample(null);
 
 
-        return new PageResult(p.getTotal(),p.getResult());
+        return new PageResult(p.getTotal(), p.getResult());
     }
 
     @Override
@@ -118,6 +121,5 @@ public class SpecificationServiceImpl implements SpecificationService {
     public List<Map> selectOptionList() {
         return specificationDao.selectOptionList();
     }
-
 
 }

@@ -9,24 +9,21 @@ import cn.itcast.core.pojo.template.TypeTemplate;
 import cn.itcast.core.pojo.template.TypeTemplateCheck;
 import com.alibaba.dubbo.config.annotation.Service;
 import com.alibaba.fastjson.JSON;
-import com.fasterxml.jackson.databind.jsontype.TypeSerializer;
 import com.github.pagehelper.Page;
 import com.github.pagehelper.PageHelper;
 import entity.PageResult;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.Map;
 
+
 /**
  * 模板管理
+ *
  * @Transactional : 单机版事务  分布式事务  基于Mysql或是oracle 毫无意义
  * Spring事务？  Mysql的事务  必须有事务  begin transation   Sql Mysql不执行或执行也不显示数据  commit rollback
- *
- *
- *
  */
 @Service
 @Transactional
@@ -38,56 +35,57 @@ public class TypeTemplateServiceImpl implements TypeTemplateService {
     private SpecificationOptionDao specificationOptionDao;
     @Autowired
     private TypeTemplateCheckDao typeTemplateCheckDao;
+
 /*    @Autowired
     private RedisTemplate redisTemplate;*/
 
     //查询分页对象
     @Override
-    public PageResult search(Integer page, Integer rows, TypeTemplate tt) {
+    public PageResult search1(Integer page, Integer rows, TypeTemplate tt) {
 
         //查询的所有模板结果集
-/*        List<TypeTemplateCheck> typeTemplates = typeTemplateCheckDao.selectByExample(null);
+        /*List<TypeTemplateCheck> typeTemplates = typeTemplateCheckDao.selectByExample(null);
         for (TypeTemplate typeTemplate : typeTemplates) {
 
 
             //品牌结果集字符串
             // [{"id":1,"text":"联想"},{"id":3,"text":"三星"},{"id":9,"text":"苹果"},{"id":4,"text":"小米"}]
             List<Map> brandList = JSON.parseArray(typeTemplate.getBrandIds(), Map.class);
-            redisTemplate.boundHashOps("brandList").put(typeTemplate.getId(),brandList);
+            redisTemplate.boundHashOps("brandList").put(typeTemplate.getId(), brandList);
 
 
             List<Map> specList = findBySpecList(typeTemplate.getId());
-            redisTemplate.boundHashOps("specList").put(typeTemplate.getId(),specList);
-
+            redisTemplate.boundHashOps("specList").put(typeTemplate.getId(), specList);
         }*/
-        PageHelper.startPage(page,rows);
-        Page<TypeTemplateCheck> p = (Page<TypeTemplateCheck>) typeTemplateCheckDao.selectByExample(null);
-        return new PageResult(p.getTotal(),p.getResult());
+        PageHelper.startPage(page, rows);
+        Page<TypeTemplate> p = (Page<TypeTemplate>) typeTemplateDao.selectByExample(null);
+        return new PageResult(p.getTotal(), p.getResult());
     }
+
 
     //添加
     @Override
-    public void add(TypeTemplateCheck ttc) {
+    public void add1(TypeTemplateCheck ttc) {
         ttc.setTemplateStatus("0");
         typeTemplateCheckDao.insertSelective(ttc);
     }
 
     //查询一个模板
     @Override
-    public TypeTemplateCheck findOne(Long id) {
+    public TypeTemplateCheck findOne1(Long id) {
         return typeTemplateCheckDao.selectByPrimaryKey(id);
     }
 
     //修改
     @Override
-    public void update(TypeTemplateCheck ttc) {
+    public void update1(TypeTemplateCheck ttc) {
         typeTemplateCheckDao.updateByPrimaryKeySelective(ttc);
     }
 
-    
+
     ////根据模板ID查询规格List<Map> 每一个Map要有规格选项结果集
     @Override
-    public List<Map> findBySpecList(Long id) {
+    public List<Map> findBySpecList1(Long id) {
 
         //模板对象
         TypeTemplate typeTemplate = typeTemplateDao.selectByPrimaryKey(id);
@@ -98,14 +96,12 @@ public class TypeTemplateServiceImpl implements TypeTemplateService {
         for (Map map : listMap) {
             SpecificationOptionQuery query = new SpecificationOptionQuery();
             query.createCriteria().andSpecIdEqualTo(Long.parseLong((String.valueOf(map.get("id")))));
-                             //报错：Object --> Integer String  基本类型 --> Long特殊类型 长整
+            //报错：Object --> Integer String  基本类型 --> Long特殊类型 长整
             List<SpecificationOption> specificationOptions = specificationOptionDao.selectByExample(query);
-            map.put("options",specificationOptions);
+            map.put("options", specificationOptions);
         }
         return listMap;
     }
-
-    //Mysql 索引库 消息 队列  分布式文件系统 Redis缓存
 
 
 }

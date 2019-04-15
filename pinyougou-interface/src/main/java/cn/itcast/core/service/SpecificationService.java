@@ -16,7 +16,7 @@ public interface SpecificationService {
 
     void add(SpecificationCheckVo specificationCheckVo);
 
-    /*void add(SpecificationCheck specificationCheck);*/
+
 
 
     SpecificationCheckVo findOne(Long id);
@@ -24,5 +24,6 @@ public interface SpecificationService {
     void update(SpecificationCheckVo specificationCheckVo);
 
     List<Map> selectOptionList();
+
 
 }

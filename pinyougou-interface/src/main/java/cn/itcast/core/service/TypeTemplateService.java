@@ -17,4 +17,15 @@ public interface TypeTemplateService {
     void update(TypeTemplateCheck tt);
 
     List<Map> findBySpecList(Long id);
+
+    PageResult searchStatus(Integer page, Integer rows, TypeTemplateCheck typeTemplateCheck);
+
+    void updateStatus(Long[] ids, String status);
+
+    List<TypeTemplateCheck> findStatusAll();
+
+    void deleteStatus(Long id);
+
+    void addspecification(TypeTemplate typeTemplate);
+
 }

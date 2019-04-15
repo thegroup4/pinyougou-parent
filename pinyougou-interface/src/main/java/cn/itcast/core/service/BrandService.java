@@ -1,6 +1,7 @@
 package cn.itcast.core.service;
 
 import cn.itcast.core.pojo.good.Brand;
+import cn.itcast.core.pojo.good.BrandCheck;
 import entity.PageResult;
 
 import java.util.List;
@@ -23,4 +24,15 @@ public interface BrandService {
     PageResult search(Integer pageNo, Integer pageSize, Brand brand);
 
     List<Map> selectOptionList();
+
+    /*
+     * Brand审核
+     * */
+    List<BrandCheck> findStatusAll();
+
+    PageResult searchStatus(Integer pageNo, Integer pageSize, BrandCheck brandCheck);
+
+    void deleteStatus(Long id);
+
+    void updateStatus(Long[] ids, String status);
 }
