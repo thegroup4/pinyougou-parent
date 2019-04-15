@@ -60,7 +60,7 @@ public class TypeTemplateServiceImpl implements TypeTemplateService {
             redisTemplate.boundHashOps("specList").put(typeTemplate.getId(), specList);
         }*/
         PageHelper.startPage(page, rows);
-        Page<TypeTemplate> p = (Page<TypeTemplate>) typeTemplateDao.selectByExample(null);
+        Page<TypeTemplateCheck> p = (Page<TypeTemplateCheck>) typeTemplateCheckDao.selectByExample(null);
         return new PageResult(p.getTotal(), p.getResult());
     }
 
