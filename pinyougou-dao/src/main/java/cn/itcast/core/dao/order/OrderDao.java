@@ -4,6 +4,7 @@ import cn.itcast.core.pojo.order.Order;
 import cn.itcast.core.pojo.order.OrderQuery;
 import java.util.List;
 import org.apache.ibatis.annotations.Param;
+import org.apache.ibatis.annotations.Select;
 
 public interface OrderDao {
     int countByExample(OrderQuery example);
@@ -27,4 +28,8 @@ public interface OrderDao {
     int updateByPrimaryKeySelective(Order record);
 
     int updateByPrimaryKey(Order record);
+
+    @Select("select * from tb_item where seller_id = #{name}")
+    int selectManeyByOneDay();
+
 }

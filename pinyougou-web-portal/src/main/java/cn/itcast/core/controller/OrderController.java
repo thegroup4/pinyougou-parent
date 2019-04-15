@@ -9,6 +9,12 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+import java.util.List;
+import java.util.Map;
+
 /**
  * 订单管理
  */
@@ -34,5 +40,21 @@ public class OrderController {
             e.printStackTrace();
             return new Result(false,"提交订单失败");
         }
+    }
+
+    @RequestMapping("/sellNum")
+    public List<Map> orderStatistics(String startDateStr,String endDateStr){
+        String name = SecurityContextHolder.getContext().getAuthentication().getName();
+        SimpleDateFormat startFormat = new SimpleDateFormat("yyyy-MM-dd");
+        SimpleDateFormat endFormat = new SimpleDateFormat("yyyy-MM-dd");
+        try {
+            Date startDate = startFormat.parse(startDateStr);
+            Date endDate = endFormat.parse(endDateStr);
+            return orderService.orderStatistics(startDate,endDate,name);
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+        //如果出问题
+        return null;
     }
 }
