@@ -1,11 +1,10 @@
 package cn.itcast.core.service;
 
+import cn.itcast.core.dao.specification.SpecificationCheckDao;
 import cn.itcast.core.dao.specification.SpecificationDao;
 import cn.itcast.core.dao.specification.SpecificationOptionDao;
 import cn.itcast.core.pojo.good.BrandQuery;
-import cn.itcast.core.pojo.specification.Specification;
-import cn.itcast.core.pojo.specification.SpecificationOption;
-import cn.itcast.core.pojo.specification.SpecificationOptionQuery;
+import cn.itcast.core.pojo.specification.*;
 import com.alibaba.dubbo.config.annotation.Service;
 import com.github.pagehelper.Page;
 import com.github.pagehelper.PageHelper;
@@ -28,17 +27,19 @@ public class SpecificationServiceImpl implements SpecificationService {
     private SpecificationDao specificationDao;
     @Autowired
     private SpecificationOptionDao specificationOptionDao;
+    @Autowired
+    private SpecificationCheckDao specificationCheckDao;
 
     //查询分页 有条件
     @Override
     public PageResult search(Integer page, Integer rows, Specification specification) {
         //插件
-        PageHelper.startPage(page,rows);
+        PageHelper.startPage(page, rows);
 
         Page<Specification> p = (Page<Specification>) specificationDao.selectByExample(null);
 
 
-        return new PageResult(p.getTotal(),p.getResult());
+        return new PageResult(p.getTotal(), p.getResult());
     }
 
     //添加
@@ -95,4 +96,67 @@ public class SpecificationServiceImpl implements SpecificationService {
     public List<Map> selectOptionList() {
         return specificationDao.selectOptionList();
     }
+
+    /**
+     * 获取所有specificationCheck并分页条件查询
+     *
+     * @param page
+     * @param rows
+     * @param specificationCheck
+     * @return
+     */
+    @Override
+    public PageResult searchStatus(Integer page, Integer rows, SpecificationCheck specificationCheck) {
+        PageHelper.startPage(page, rows);
+
+        SpecificationCheckQuery specificationCheckQuery = new SpecificationCheckQuery();
+        SpecificationCheckQuery.Criteria criteria = specificationCheckQuery.createCriteria();
+        if (null != specificationCheck.getSpecName() && !"".equals(specificationCheck.getSpecName().trim())) {
+            criteria.andSpecNameLike("%" + specificationCheck.getSpecName().trim() + "%");
+        }
+        Page<SpecificationCheck> specificationChecks = (Page<SpecificationCheck>) specificationCheckDao.selectByExample(specificationCheckQuery);
+        return new PageResult(specificationChecks.getTotal(), specificationChecks.getResult());
+    }
+
+    /*
+     * 规格审核查询所有
+     * */
+    @Override
+    public List<SpecificationCheck> findStatusAll() {
+        return specificationCheckDao.selectByExample(null);
+    }
+
+
+    /*
+     * 更改审核状态
+     * */
+    @Override
+    public void updateStatus(Long[] ids, String status) {
+        SpecificationCheck check = new SpecificationCheck();
+        check.setSpecStatus(status);
+        for (Long id : ids) {
+            if (id != null) {
+                check.setId(id);
+                specificationCheckDao.updateByPrimaryKeySelective(check);
+            }
+        }
+    }
+
+    /*
+     *删除
+     * */
+    @Override
+    public void deleteStatus(Long id) {
+        specificationCheckDao.deleteByPrimaryKey(id);
+    }
+
+    /*
+     * 添加规格
+     * */
+    @Override
+    public void addspecification(Specification specification) {
+        specificationDao.insertSelective(specification);
+    }
+
+
 }

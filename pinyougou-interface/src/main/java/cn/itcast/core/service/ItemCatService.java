@@ -17,4 +17,5 @@ public interface ItemCatService {
 
     void updateStatus(Long[] ids, String status);
 
+    void saveStatus(ItemCat1 itemCat1);
 }

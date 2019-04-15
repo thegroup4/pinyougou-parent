@@ -1,5 +1,5 @@
  //控制层 
-app.controller('goodsController' ,function($scope,$controller,$location,typeTemplateService ,itemCatService,uploadService ,goodsService){
+app.controller('goodsController' ,function($scope,$controller,$location,typeTemplateService ,itemCatServices,uploadService ,goodsService){
 
 	$controller('baseController',{$scope:$scope});//继承
 
@@ -153,7 +153,7 @@ app.controller('goodsController' ,function($scope,$controller,$location,typeTemp
 
 	// 查询一级分类列表:
 	$scope.selectItemCat1List = function(){
-		itemCatService.findByParentId(0).success(function(response){
+		itemCatServices.findByParentId(0).success(function(response){
 			$scope.itemCat1List = response;
 		});
 
@@ -161,21 +161,21 @@ app.controller('goodsController' ,function($scope,$controller,$location,typeTemp
 
 	// 查询二级分类列表:
 	$scope.$watch("entity.goods.category1Id",function(newValue,oldValue){
-		itemCatService.findByParentId(newValue).success(function(response){
+		itemCatServices.findByParentId(newValue).success(function(response){
 			$scope.itemCat2List = response;
 		});
 	});
 
 	// 查询三级分类列表:
 	$scope.$watch("entity.goods.category2Id",function(newValue,oldValue){
-		itemCatService.findByParentId(newValue).success(function(response){
+		itemCatServices.findByParentId(newValue).success(function(response){
 			$scope.itemCat3List = response;
 		});
 	});
 
 	// 查询模块ID
 	$scope.$watch("entity.goods.category3Id",function(newValue,oldValue){
-		itemCatService.findOne(newValue).success(function(response){
+		itemCatServices.findOne(newValue).success(function(response){
 			$scope.entity.goods.typeTemplateId = response.typeId;
 		});
 	});
@@ -264,7 +264,7 @@ app.controller('goodsController' ,function($scope,$controller,$location,typeTemp
 	// 显示分类:
 	$scope.findItemCatList = function(){
 
-		itemCatService.findAll().success(function(response){// List<ItemCat>
+		itemCatServices.findAll().success(function(response){// List<ItemCat>
 
 
 

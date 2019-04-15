@@ -72,6 +72,7 @@ public class ItemCatServiceImpl implements ItemCatService {
         return itemCatDao.selectByExample(null);
 
     }
+
     @Autowired
     private JmsTemplate jmsTemplate;
     @Autowired
@@ -110,6 +111,11 @@ public class ItemCatServiceImpl implements ItemCatService {
             itemCat1.setId(id);
             itemCatDao1.updateByPrimaryKeySelective(itemCat1);
         }
+    }
+
+    @Override
+    public void saveStatus(ItemCat1 itemCat1) {
+        itemCatDao1.insertSelective(itemCat1);
     }
 
 

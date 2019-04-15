@@ -3,7 +3,7 @@ app.service("brandService",function($http){
 	this.findAll = function(){
 		return $http.get("../brand/findAll.do");
 	}
-	
+
 	this.findPage = function(page,rows){
 		return $http.get("../brand/findPage.do?pageNum="+page+"&pageSize="+rows);
 	}
@@ -31,4 +31,12 @@ app.service("brandService",function($http){
 	this.selectOptionList = function(){
 		return $http.get("../brand/selectOptionList.do");
 	}
+
+    this.updateStatus = function(ids,status){
+        return $http.get('../brandStatus/updateStatus.do?ids='+ids+"&status="+status);
+    }
+
+    this.searchStatus = function(page,rows,searchEntity){
+        return $http.post("../brandStatus/search.do?pageNo="+page+"&pageSize="+rows,searchEntity);
+    }
 });
