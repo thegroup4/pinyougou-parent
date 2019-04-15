@@ -20,7 +20,11 @@
     <!--发布订阅模式, 生成页面-->  
 	<bean id="topicPageAndSolrDestination" class="org.apache.activemq.command.ActiveMQTopic">  
 	    <constructor-arg value="pinyougou_topic_page_solr"/>  
-	</bean>    
+	</bean>
+
+	<bean id="topicPageSeckillDestination" class="org.apache.activemq.command.ActiveMQTopic">
+		<constructor-arg value="pinyougou_topic_page_seckill"/>
+	</bean>
 	
 	<!-- 发布订阅模式, 消息监听容器   生成页面 -->
 	<bean class="org.springframework.jms.listener.DefaultMessageListenerContainer">

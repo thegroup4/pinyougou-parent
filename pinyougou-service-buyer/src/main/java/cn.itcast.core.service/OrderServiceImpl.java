@@ -9,9 +9,11 @@ import cn.itcast.core.pojo.item.Item;
 import cn.itcast.core.pojo.log.PayLog;
 import cn.itcast.core.pojo.order.Order;
 import cn.itcast.core.pojo.order.OrderItem;
+import cn.itcast.core.pojo.order.OrderQuery;
 import com.alibaba.dubbo.config.annotation.Service;
-import org.apache.commons.collections.ArrayStack;
-import org.apache.commons.collections.FastArrayList;
+import com.github.pagehelper.Page;
+import com.github.pagehelper.PageHelper;
+import entity.PageResult;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.transaction.annotation.Transactional;
@@ -27,7 +29,7 @@ import java.util.List;
  */
 @Service
 @Transactional
-public class OrderServiceImpl implements  OrderService {
+public class OrderServiceImpl implements OrderService {
 
     @Autowired
     private RedisTemplate redisTemplate;
@@ -150,4 +152,50 @@ public class OrderServiceImpl implements  OrderService {
         //redisTemplate.boundHashOps("CART").delete(order.getUserId());
 
     }
+
+    @Override
+    public PageResult search(Integer page, Integer rows, String sellerId, Order order) {
+
+        PageHelper.startPage(page,rows);
+
+        OrderQuery orderQuery = new OrderQuery();
+
+        OrderQuery.Criteria criteria = orderQuery.createCriteria();
+        criteria.andSellerIdEqualTo(sellerId);
+
+        if (null!=order.getStatus()&&!"".equals(order.getStatus())){
+            criteria.andStatusEqualTo(order.getStatus());
+        }
+        if (null!=order.getCreateTime()&&!"".equals(order.getCreateTime())){
+            criteria.andCreateTimeEqualTo(order.getCreateTime());
+        }
+        Page<Order> pageList = (Page<Order>) orderDao.selectByExample(orderQuery);
+
+
+        return new PageResult(pageList.getTotal(),pageList.getResult());
+
+        }
+
+    @Override
+    public void update(Long id,String  status) {
+
+        Order order = new Order();
+        order.setStatus(status);
+
+        order.setOrderId(id);
+        orderDao.updateByPrimaryKeySelective(order);
+
+
+    }
+
+    @Override
+    public Order findByOrderId(Long id) {
+
+        Order order = orderDao.selectByPrimaryKey(id);
+
+        return order;
+    }
+
+
 }
+

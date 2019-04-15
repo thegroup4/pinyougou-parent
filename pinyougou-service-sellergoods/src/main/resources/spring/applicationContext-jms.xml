@@ -30,6 +30,9 @@
 	<bean id="topicPageAndSolrDestination" class="org.apache.activemq.command.ActiveMQTopic">
 	    <constructor-arg value="pinyougou_topic_page_solr"/>  
 	</bean>
+	<bean id="topicPageSeckillDestination" class="org.apache.activemq.command.ActiveMQTopic">
+		<constructor-arg value="pinyougou_topic_page_seckill"/>
+	</bean>
 
 	<!-- 点对点模式，删除索引库-->
 	<bean id="queueSolrDeleteDestination" class="org.apache.activemq.command.ActiveMQQueue">

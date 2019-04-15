@@ -2,7 +2,11 @@ package cn.itcast.core.service;
 
 import cn.itcast.core.dao.user.UserDao;
 import cn.itcast.core.pojo.user.User;
+import cn.itcast.core.pojo.user.UserQuery;
 import com.alibaba.dubbo.config.annotation.Service;
+import com.github.pagehelper.Page;
+import com.github.pagehelper.PageHelper;
+import entity.PageResult;
 import org.apache.commons.lang3.RandomStringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.RedisTemplate;
@@ -12,7 +16,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import javax.jms.*;
 import java.util.Date;
-import java.util.Random;
+import java.util.List;
 import java.util.concurrent.TimeUnit;
 
 /**
@@ -79,5 +83,41 @@ public class UserServiceImpl implements  UserService {
 
 
     }
+
+    @Override
+    public PageResult search(Integer page, Integer rows, User user) {
+
+        PageHelper.startPage(page,rows);
+
+        UserQuery userQuery = new UserQuery();
+        UserQuery.Criteria criteria = userQuery.createCriteria();
+
+        if (null!=user.getStatus()&&!"".equals(user.getStatus())){
+            criteria.andStatusEqualTo(user.getStatus());
+        }
+        if (null!=user.getNickName()&&!"".equals(user.getNickName())){
+            criteria.andNickNameLike("%"+user.getNickName().trim()+"%");
+        }
+
+       Page<User> page1= (Page<User>) userDao.selectByExample(userQuery);
+
+
+
+
+        return new PageResult(page1.getTotal(),page1.getResult());
+    }
+
+    @Override
+    public void updateStatus(Long[] ids, String status) {
+        User user = new User();
+
+        user.setStatus(status);
+        for (Long id : ids) {
+            user.setId(id);
+            userDao.updateByPrimaryKeySelective(user);
+        }
+    }
+
+
 
 }

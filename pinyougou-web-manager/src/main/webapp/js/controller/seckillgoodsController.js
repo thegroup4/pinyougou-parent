@@ -49,5 +49,11 @@ app.controller('seckillgoodsController' ,function($scope,$controller,seckillgood
 				alert(response.message);
 			}
 		});
-	}
+	};
+	$scope.findByGoodId=function(goodsId){
+        seckillgoodsService.findByGoodId(goodsId).success(function(response){
+        	//alert(1111);
+            $scope.entitylist = response;
+        });
+	};
 });	

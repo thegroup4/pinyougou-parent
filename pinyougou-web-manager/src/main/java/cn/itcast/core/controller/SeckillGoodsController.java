@@ -9,6 +9,8 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.util.*;
+
 @SuppressWarnings("all")
 @RestController
 @RequestMapping("/seckillgoods")
@@ -20,7 +22,25 @@ public class SeckillGoodsController {
     @RequestMapping("/search")
     public PageResult findBypage(Integer page, Integer rows, @RequestBody SeckillGoods seckillGoods){
 
-      return  seckillGoodsService.search(page,rows,seckillGoods);
+        PageResult search = seckillGoodsService.search(page, rows, seckillGoods);
+
+        List<SeckillGoods> rows1 = search.getRows();
+
+        Map<Long, SeckillGoods> map = new HashMap<>();
+        List<SeckillGoods> list=new ArrayList<>();
+
+        for (SeckillGoods goods : rows1) {
+            if (!map.containsKey(goods.getGoodsId())){
+                map.put(goods.getGoodsId(),goods);
+            }
+        }
+        Collection<SeckillGoods> values = map.values();
+        for (SeckillGoods value : values) {
+            list.add(value);
+        }
+
+
+        return new PageResult(search.getTotal(),list) ;
 
     }
     @RequestMapping("/updateStatus")
@@ -35,5 +55,11 @@ public class SeckillGoodsController {
         }
 
 
+    }
+    @RequestMapping("/findByGooIds")
+    public List<SeckillGoods> findByGooIds(Long goodsId){
+      List<SeckillGoods> seckillGoods=  seckillGoodsService.findByGoodsId(goodsId);
+
+      return seckillGoods;
     }
 }
