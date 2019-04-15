@@ -47,6 +47,7 @@ public class StaticPageServiceImpl implements StaticPageService,ServletContextAw
     //静态化程序
     // 手动点击 审核通过
     // 半夜     定时器
+    @Override
     public void index(Long id){
 
         //1:获取有模板目录的 COnfiguration
@@ -106,7 +107,7 @@ public class StaticPageServiceImpl implements StaticPageService,ServletContextAw
 
     }
     //获取全部路径
-    public String getPath(String path){
+    private String getPath(String path){
         return servletContext.getRealPath(path);
     }
 

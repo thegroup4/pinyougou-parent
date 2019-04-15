@@ -1,6 +1,5 @@
 package cn.itcast.core.service;
 
-import cn.itcast.core.dao.specification.SpecificationCheckDao;
 import cn.itcast.core.dao.specification.SpecificationOptionDao;
 import cn.itcast.core.dao.template.TypeTemplateCheckDao;
 import cn.itcast.core.dao.template.TypeTemplateDao;
@@ -11,7 +10,6 @@ import cn.itcast.core.pojo.template.TypeTemplateCheck;
 import cn.itcast.core.pojo.template.TypeTemplateCheckQuery;
 import com.alibaba.dubbo.config.annotation.Service;
 import com.alibaba.fastjson.JSON;
-import com.fasterxml.jackson.databind.jsontype.TypeSerializer;
 import com.github.pagehelper.Page;
 import com.github.pagehelper.PageHelper;
 import entity.PageResult;
@@ -21,6 +19,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.Map;
+
 
 /**
  * 模板管理
@@ -38,15 +37,16 @@ public class TypeTemplateServiceImpl implements TypeTemplateService {
     private SpecificationOptionDao specificationOptionDao;
     @Autowired
     private TypeTemplateCheckDao typeTemplateCheckDao;
+
     @Autowired
     private RedisTemplate redisTemplate;
 
     //查询分页对象
     @Override
-    public PageResult search(Integer page, Integer rows, TypeTemplate tt) {
+    public PageResult search1(Integer page, Integer rows, TypeTemplateCheck ttc) {
 
         //查询的所有模板结果集
-        List<TypeTemplate> typeTemplates = typeTemplateDao.selectByExample(null);
+/*        List<TypeTemplateCheck> typeTemplates = typeTemplateCheckDao.selectByExample(null);
         for (TypeTemplate typeTemplate : typeTemplates) {
 
 
@@ -58,37 +58,36 @@ public class TypeTemplateServiceImpl implements TypeTemplateService {
 
             List<Map> specList = findBySpecList(typeTemplate.getId());
             redisTemplate.boundHashOps("specList").put(typeTemplate.getId(), specList);
-
-        }
-
-
+        }*/
         PageHelper.startPage(page, rows);
-        Page<TypeTemplate> p = (Page<TypeTemplate>) typeTemplateDao.selectByExample(null);
+        Page<TypeTemplateCheck> p = (Page<TypeTemplateCheck>) typeTemplateCheckDao.selectByExample(null);
         return new PageResult(p.getTotal(), p.getResult());
     }
 
+
     //添加
     @Override
-    public void add(TypeTemplate tt) {
-        typeTemplateDao.insertSelective(tt);
+    public void add1(TypeTemplateCheck ttc) {
+        ttc.setTemplateStatus("0");
+        typeTemplateCheckDao.insertSelective(ttc);
     }
 
     //查询一个模板
     @Override
-    public TypeTemplate findOne(Long id) {
-        return typeTemplateDao.selectByPrimaryKey(id);
+    public TypeTemplateCheck findOne1(Long id) {
+        return typeTemplateCheckDao.selectByPrimaryKey(id);
     }
 
     //修改
     @Override
-    public void update(TypeTemplate tt) {
-        typeTemplateDao.updateByPrimaryKeySelective(tt);
+    public void update1(TypeTemplateCheck ttc) {
+        typeTemplateCheckDao.updateByPrimaryKeySelective(ttc);
     }
 
 
     ////根据模板ID查询规格List<Map> 每一个Map要有规格选项结果集
     @Override
-    public List<Map> findBySpecList(Long id) {
+    public List<Map> findBySpecList1(Long id) {
 
         //模板对象
         TypeTemplate typeTemplate = typeTemplateDao.selectByPrimaryKey(id);
@@ -105,8 +104,6 @@ public class TypeTemplateServiceImpl implements TypeTemplateService {
         }
         return listMap;
     }
-
-
     /**
      * 商品审核查询分页条件查询
      *
@@ -154,7 +151,65 @@ public class TypeTemplateServiceImpl implements TypeTemplateService {
         typeTemplateDao.insertSelective(typeTemplate);
     }
 
-    //Mysql 索引库 消息 队列  分布式文件系统 Redis缓存
+    //查询分页对象
+    @Override
+    public PageResult search(Integer page, Integer rows, TypeTemplate tt) {
+        //查询的所有模版结果集
+        List<TypeTemplate> typeTemplates = typeTemplateDao.selectByExample(null);
+        for (TypeTemplate typeTemplate : typeTemplates) {
 
+            //品牌结果集字符串
+            List<Map> brandList = JSON.parseArray(typeTemplate.getBrandIds(), Map.class);
+            redisTemplate.boundHashOps("brandList").put(typeTemplate.getId(),brandList);
+
+            //规格结果集字符串
+            List<Map> specList = findBySpecList(typeTemplate.getId());
+            redisTemplate.boundHashOps("specList").put(typeTemplate.getId(),specList);
+
+
+        }
+
+        PageHelper.startPage(page,rows);
+        Page<TypeTemplate> p = (Page<TypeTemplate>) typeTemplateDao.selectByExample(null);
+        return new PageResult(p.getTotal(),p.getResult());
+    }
+
+    //添加
+    @Override
+    public void add(TypeTemplate tt) {
+        typeTemplateDao.insertSelective(tt);
+    }
+
+    //查询一个模板
+    @Override
+    public TypeTemplate findOne(Long id) {
+        return typeTemplateDao.selectByPrimaryKey(id);
+    }
+
+    //修改
+    @Override
+    public void update(TypeTemplate tt) {
+        typeTemplateDao.updateByPrimaryKeySelective(tt);
+    }
+
+    @Override
+    public List<Map> findBySpecList(Long id) {
+        //根据模版id查出来一个模版对象
+        TypeTemplate typeTemplate = typeTemplateDao.selectByPrimaryKey(id);
+        //下方查询出来的结果[{"id":27,"text":"网络"},{"id":32,"text":"机身内存"}]
+        String specIds = typeTemplate.getSpecIds();
+        //转成list<map>
+        List<Map> maps = JSON.parseArray(specIds, Map.class);
+        for (Map map : maps) {
+
+            SpecificationOptionQuery query = new SpecificationOptionQuery();
+            query.createCriteria().andSpecIdEqualTo(Long.parseLong(String.valueOf(map.get("id"))));
+
+            List<SpecificationOption> specificationOptions = specificationOptionDao.selectByExample(query);
+
+            map.put("options",specificationOptions);
+        }
+        return maps;
+    }
 
 }

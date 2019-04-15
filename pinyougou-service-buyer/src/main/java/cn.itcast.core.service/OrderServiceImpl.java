@@ -1,14 +1,19 @@
 package cn.itcast.core.service;
 
+import cn.itcast.common.utils.DateUtils;
 import cn.itcast.common.utils.IdWorker;
+import cn.itcast.core.dao.good.GoodsDao;
 import cn.itcast.core.dao.item.ItemDao;
 import cn.itcast.core.dao.log.PayLogDao;
 import cn.itcast.core.dao.order.OrderDao;
 import cn.itcast.core.dao.order.OrderItemDao;
+import cn.itcast.core.pojo.good.Goods;
 import cn.itcast.core.pojo.item.Item;
 import cn.itcast.core.pojo.log.PayLog;
 import cn.itcast.core.pojo.order.Order;
 import cn.itcast.core.pojo.order.OrderItem;
+import cn.itcast.core.pojo.order.OrderQuery;
+import cn.itcast.core.pojo.order.OrderItemQuery;
 import cn.itcast.core.pojo.order.OrderQuery;
 import com.alibaba.dubbo.config.annotation.Service;
 import com.github.pagehelper.Page;
@@ -20,9 +25,7 @@ import org.springframework.transaction.annotation.Transactional;
 import vo.Cart;
 
 import java.math.BigDecimal;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
+import java.util.*;
 
 /**
  * 订单管理
@@ -154,6 +157,81 @@ public class OrderServiceImpl implements OrderService {
     }
 
     @Override
+    public List<Map> orderStatistics(Date startDate, Date endDate,String name) {
+        name = "qiandu";
+        List<Map> listMap = new ArrayList<>();
+
+
+
+        //  list<Map<goodsName, Map<date,money>>>
+
+
+
+        //如果传入的名字不为空则表示是商家进行查询的
+        if (name!=null) {
+            //传入的日期相差多少天
+            int i = DateUtils.compareWithTwoDate(startDate, endDate);
+            //从选择的日期进行开始查询
+            for (int j = 0; j < i; j++) {
+                HashMap<String, Object> dayMap = new HashMap<>();
+                HashMap<String, Object> goodsResult = new HashMap<>();
+                HashMap<String, Object> goodsMap = new HashMap<>();
+
+                //每天的总价
+                BigDecimal dayTotal = new BigDecimal(0);
+                BigDecimal multiply = new BigDecimal(0);
+                //每种货物的总价
+                int goodsTotal = 0;
+                Date startDate1 = DateUtils.dateAddOrSubtract(startDate, j);
+                Date endDate1 = DateUtils.dateAddOrSubtract(startDate, j + 1);
+
+                //查询一天的所有订单
+                OrderQuery orderQuery = new OrderQuery();
+                OrderQuery.Criteria criteria = orderQuery.createCriteria();
+                criteria.andSellerIdEqualTo(name);
+                //已经得到每天的订单结果集
+                List<Order> orders = orderDao.selectByExample(orderQuery);
+
+                //遍历每天的订单结果集得到每一个订单
+                for (Order order : orders) {
+                    //通过订单ID查询所有的订单
+                    Long orderId = order.getOrderId();
+                    OrderItemQuery orderItemQuery = new OrderItemQuery();
+                    OrderItemQuery.Criteria criteria1 = orderItemQuery.createCriteria();
+                    criteria1.andItemIdEqualTo(orderId);
+
+                    //已经得到每个订单
+                    List<OrderItem> orderItems = orderItemDao.selectByExample(orderItemQuery);
+                    //遍历每个订单，获取购物项
+                    for (OrderItem orderItem : orderItems) {
+                        //获取每个购物项的名称
+                        Goods goods = goodsDao.selectByPrimaryKey(orderItem.getGoodsId());
+                        //判断是否有该goods的名称,
+                        if(goodsMap.get(goods.getGoodsName())!=null) {
+                            //如果有 则取出来 增加 再设置回去
+                             BigDecimal money = (BigDecimal) goodsMap.get(goods.getGoodsName());
+                            goodsMap.put(goods.getGoodsName(), orderItem.getTotalFee().multiply(money));
+                        }else {
+                            //如果没有则增加
+                            goodsMap.put(goods.getGoodsName(),orderItem.getTotalFee());
+                        }
+                        //总销售量增加
+                         multiply = dayTotal.multiply(orderItem.getTotalFee());
+                    }
+                }
+                //添加每种商品的每日的销售量
+                goodsResult.put(String.valueOf(startDate1),goodsMap);
+                //加入到list集合中去
+                listMap.add(goodsResult);
+                dayMap.put(String.valueOf(startDate1),multiply);
+
+                listMap.add(dayMap);
+            }
+        }
+        return listMap;
+    }
+
+    @Override
     public PageResult search(Integer page, Integer rows, String sellerId, Order order) {
 
         PageHelper.startPage(page,rows);
@@ -198,4 +276,3 @@ public class OrderServiceImpl implements OrderService {
 
 
 }
-

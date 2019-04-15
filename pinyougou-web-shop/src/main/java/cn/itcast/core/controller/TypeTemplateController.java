@@ -57,10 +57,10 @@ public class TypeTemplateController {
     public TypeTemplate findOne(Long id){
         return typeTemplateService.findOne(id);
     }
-    //根据模板ID查询规格List<Map> 每一个Map要有规格选项结果集
-    @RequestMapping("/findBySpecList")
+
+    //根据模版id查询规格list<map> 每一个map要有规格选项结果集
+    @RequestMapping("findBySpecList")
     public List<Map> findBySpecList(Long id){
         return typeTemplateService.findBySpecList(id);
     }
-
 }

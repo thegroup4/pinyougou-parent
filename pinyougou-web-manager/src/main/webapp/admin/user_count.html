@@ -1,0 +1,213 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <!-- 页面meta -->
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <title>商家管理</title>
+    <!-- Tell the browser to be responsive to screen width -->
+    <meta content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no" name="viewport">
+    <link rel="stylesheet" href="../plugins/bootstrap/css/bootstrap.min.css">
+    <link rel="stylesheet" href="../plugins/adminLTE/css/AdminLTE.css">
+    <link rel="stylesheet" href="../plugins/adminLTE/css/skins/_all-skins.min.css">
+    <link rel="stylesheet" href="../css/style.css">
+    <script src="../plugins/jQuery/jquery-2.2.3.min.js"></script>
+    <script src="../plugins/bootstrap/js/bootstrap.min.js"></script>
+    <!-- 引入angular的js -->
+    <script type="text/javascript" src="../plugins/angularjs/angular.min.js"></script>
+    <!-- 引入分页相关的JS和CSS -->
+    <script type="text/javascript" src="../plugins/angularjs/pagination.js"></script>
+    <link rel="stylesheet" href="../plugins/angularjs/pagination.css">
+
+    <script type="text/javascript" src="../js/base_pagination.js"></script>
+    <script type="text/javascript" src="../js/controller/baseController.js"></script>
+
+    <script type="text/javascript" src="../js/controller/sellerUserController.js"></script>
+    <script type="text/javascript" src="../js/service/sellerUserService.js"></script>
+
+</head>
+
+<body class="hold-transition skin-red sidebar-mini" ng-app="pinyougou" ng-controller="sellerUserController">
+
+<!-- .box-body -->
+
+<div class="box-header with-border">
+    <h3 class="box-title">用户管理</h3>
+</div>
+
+<div class="box-body">
+
+    <!-- 数据表格 -->
+    <div class="table-box">
+        <div class="box-tools pull-right">
+            <div class="has-feedback">
+                用户名:<input type="text" ng-model="searchEntity.username">
+                用户昵称:<input type="text" ng-model="searchEntity.nickName">
+                用户手机号:<input type="text" ng-model="searchEntity.phone">
+                <input class="btn btn-default" ng-click="reloadList()" type="button" value="查询">
+            </div>
+        </div>
+        <!--工具栏/-->
+
+        <!--数据列表-->
+        <table id="dataList" class="table table-bordered table-striped table-hover dataTable">
+            <thead>
+            <tr>
+                <th class="" style="padding-right:0px">
+                    <input id="selall" type="checkbox" class="icheckbox_square-blue">
+                </th>
+                <th class="sorting">用户ID</th>
+                <th class="sorting">用户名</th>
+                <th class="sorting">手机号</th>
+                <th class="sorting">email</th>
+                <th class="sorting">昵称</th>
+                <th class="sorting">性别</th>
+
+            </tr>
+            </thead>
+            <tbody>
+            <tr ng-repeat="entity in list">
+                <td><input type="checkbox"></td>
+                <td>{{entity.id}}</td>
+                <td>{{entity.username}}</td>
+                <td>{{entity.phone}}</td>
+
+                <td>{{entity.email}}</td>
+                <td>{{entity.nickName}}</td>
+                <td>{{entity.sex}}</td>
+
+                <td class="text-center">
+                    <button type="button" class="btn bg-olive btn-xs" ng-click="findOne(entity.id)"
+                            data-toggle="modal" data-target="#editModal">详情
+                    </button>
+                </td>
+            </tr>
+            </tbody>
+        </table>
+        <!--数据列表/-->
+
+
+        <!-- 编辑窗口 -->
+        <div class="modal fade" id="editModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel"
+             aria-hidden="true">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+                        <h3 id="myModalLabel">{{entity.username}}的详情</h3>
+                    </div>
+                    <div class="modal-body">
+                        <table class="table table-bordered table-striped" width="800px">
+                            <tr>
+                                <td>用户名</td>
+                                <td><input ng-model="entity.name" readonly class="form-control"
+                                           placeholder="{{entity.username}}"></td>
+                            </tr>
+                            <tr>
+                                <td>注册手机号</td>
+                                <td><input ng-model="entity.firstChar" readonly class="form-control"
+                                           placeholder="{{entity.phone}}"></td>
+                            </tr>
+                            <tr>
+                                <td>注册邮箱</td>
+                                <td><input ng-model="entity.firstChar" readonly class="form-control"
+                                           placeholder="{{entity.email}}"></td>
+                            </tr>
+                            <tr>
+                                <td>会员来源</td>
+                                <td><input ng-model="entity.firstChar" readonly class="form-control"
+                                           placeholder="{{entity.sourceType}}"></td>
+                            </tr>
+                            <tr>
+                                <td>昵称</td>
+                                <td><input ng-model="entity.firstChar" readonly class="form-control"
+                                           placeholder="{{entity.nickName}}"></td>
+                            </tr>
+                            <tr>
+                                <td>真实姓名</td>
+                                <td><input ng-model="entity.firstChar" readonly class="form-control"
+                                           placeholder="{{entity.name}}"></td>
+                            </tr>
+                            <tr>
+                                <td>使用状态</td>
+                                <td><input ng-model="entity.firstChar" readonly class="form-control"
+                                           placeholder="{{entity.status}}"></td>
+                            </tr>
+                            <tr>
+                                <td>头像地址</td>
+                                <td><input ng-model="entity.firstChar" readonly class="form-control"
+                                           placeholder="{{entity.headPic}}"></td>
+                            </tr>
+                            <tr>
+                                <td>QQ号码</td>
+                                <td><input ng-model="entity.firstChar" readonly class="form-control"
+                                           placeholder="{{entity.qq}}"></td>
+                            </tr>
+                            <tr>
+                                <td>手机是否验证</td>
+                                <td><input ng-model="entity.firstChar" readonly class="form-control"
+                                           placeholder="{{entity.isMobileCheck}}"></td>
+                            </tr>
+                            <tr>
+                                <td>邮箱是否检测</td>
+                                <td><input ng-model="entity.firstChar" readonly class="form-control"
+                                           placeholder="{{entity.isEmailCheck}}"></td>
+                            </tr>
+                            <tr>
+                                <td>性别</td>
+                                <td><input ng-model="entity.firstChar" readonly class="form-control"
+                                           placeholder="{{entity.sex}}"></td>
+                            </tr>
+                            <tr>
+                                <td>公司地址</td>
+                                <td><input ng-model="entity.firstChar" readonly class="form-control"
+                                           placeholder="{{entity.address}}"></td>
+                            </tr>
+                            <tr>
+                                <td>会员等级</td>
+                                <td><input ng-model="entity.firstChar" readonly class="form-control"
+                                           placeholder="{{entity.userLevel}}"></td>
+                            </tr>
+                            <tr>
+                                <td>积分</td>
+                                <td><input ng-model="entity.firstChar" readonly class="form-control"
+                                           placeholder="{{entity.points}}"></td>
+                            </tr>
+                            <tr>
+                                <td>经验值</td>
+                                <td><input ng-model="entity.firstChar" readonly class="form-control"
+                                           placeholder="{{entity.experienceValue}}"></td>
+                            </tr>
+                            <tr>
+                                <td>生日</td>
+                                <td><input ng-model="entity.firstChar" readonly class="form-control"
+                                           placeholder="{{entity.birthday}}"></td>
+                            </tr>
+                            <tr>
+                                <td>最后登录时间</td>
+                                <td><input ng-model="entity.firstChar" readonly class="form-control"
+                                           placeholder="{{entity.lastLoginTime}}"></td>
+                            </tr>
+
+                        </table>
+                    </div>
+                    <div class="modal-footer">
+                        <button class="btn btn-default" data-dismiss="modal" aria-hidden="true">关闭</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+
+    </div>
+    <!-- 数据表格 /-->
+    <!-- 分页 -->
+    <tm-pagination conf="paginationConf"></tm-pagination>
+
+</div>
+<!-- /.box-body -->
+
+</body>
+
+</html>
