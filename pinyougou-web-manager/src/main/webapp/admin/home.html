@@ -26,10 +26,13 @@
     <script type="text/javascript" src="../js/controller/baseController.js"></script>
     <script type="text/javascript" src="../js/controller/sellerController.js"></script>
     <script type="text/javascript" src="../js/service/sellerService.js"></script>
+    <script type="text/javascript" src="../js/controller/sellerUserController.js"></script>
+    <script type="text/javascript" src="../js/service/sellerUserService.js"></script>
+
 
 </head>
 
-<body class="hold-transition skin-blue sidebar-mini" ng-app="pinyougou" ng-controller="sellerController" ng-init="findCount()">
+<body class="hold-transition skin-blue sidebar-mini" ng-app="pinyougou" ng-controller="sellerController" ng-init="sellerFindCount()">
 
    <!-- 内容区域 -->
 
@@ -127,6 +130,22 @@
                                 <i class="ion ion-stats-bars"></i>
                             </div>
                             <a href="seller_count.html" class="small-box-footer">详细 <i class="fa fa-arrow-circle-right"></i></a>
+                        </div>
+                    </div>
+
+                    <!-- ./col -->
+                    <div class="col-lg-3 col-xs-6">
+                        <!-- small box -->
+                        <div class="small-box bg-aqua">
+                            <div class="inner">
+                                <h3>{{userNum}}<sup style="font-size: 20px">人</sup>{{activeNum}}<sup style="font-size: 20px">人</sup></h3>
+
+                                <p>用户统计/活跃人数</p>
+                            </div>
+                            <div class="icon">
+                                <i class="ion ion-stats-bars"></i>
+                            </div>
+                            <a href="user_count.html" class="small-box-footer">详细 <i class="fa fa-arrow-circle-right"></i></a>
                         </div>
                     </div>
                 </div>

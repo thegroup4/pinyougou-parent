@@ -23,20 +23,17 @@
     <script type="text/javascript" src="../js/base_pagination.js"></script>
     <script type="text/javascript" src="../js/controller/baseController.js"></script>
 
-
     <script type="text/javascript" src="../js/controller/sellerUserController.js"></script>
     <script type="text/javascript" src="../js/service/sellerUserService.js"></script>
-    <script type="text/javascript" src="../js/controller/sellerController.js"></script>
-    <script type="text/javascript" src="../js/service/sellerService.js"></script>
 
 </head>
 
-<body class="hold-transition skin-red sidebar-mini" ng-app="pinyougou" ng-controller="sellerController">
+<body class="hold-transition skin-red sidebar-mini" ng-app="pinyougou" ng-controller="sellerUserController">
 
 <!-- .box-body -->
 
 <div class="box-header with-border">
-    <h3 class="box-title">订单管理</h3>
+    <h3 class="box-title">用户管理</h3>
 </div>
 
 <div class="box-body">
@@ -45,9 +42,9 @@
     <div class="table-box">
         <div class="box-tools pull-right">
             <div class="has-feedback">
-                商家名称:<input type="text" ng-model="searchEntity.name">
-                商家昵称:<input type="text" ng-model="searchEntity.nickName">
-                商家地址:<input type="text" ng-model="searchEntity.sellerAddress">
+                用户名:<input type="text" ng-model="searchEntity.username">
+                用户昵称:<input type="text" ng-model="searchEntity.nickName">
+                用户手机号:<input type="text" ng-model="searchEntity.phone">
                 <input class="btn btn-default" ng-click="reloadList()" type="button" value="查询">
             </div>
         </div>
@@ -60,29 +57,28 @@
                 <th class="" style="padding-right:0px">
                     <input id="selall" type="checkbox" class="icheckbox_square-blue">
                 </th>
-                <th class="sorting">商家Id</th>
-                <th class="sorting">商家名称</th>
-                <th class="sorting">商家昵称</th>
+                <th class="sorting">用户ID</th>
+                <th class="sorting">用户名</th>
+                <th class="sorting">手机号</th>
                 <th class="sorting">email</th>
-                <th class="sorting">telephone</th>
-                <th class="sorting">地址</th>
-                <th class="sorting">状态</th>
+                <th class="sorting">昵称</th>
+                <th class="sorting">性别</th>
 
             </tr>
             </thead>
             <tbody>
             <tr ng-repeat="entity in list">
                 <td><input type="checkbox"></td>
-                <td>{{entity.sellerId}}</td>
-                <td>{{entity.name}}</td>
-                <td>{{entity.nickName}}</td>
+                <td>{{entity.id}}</td>
+                <td>{{entity.username}}</td>
+                <td>{{entity.phone}}</td>
 
                 <td>{{entity.email}}</td>
-                <td>{{entity.telephone}}</td>
-                <td>{{entity.addressDetail}}</td>
+                <td>{{entity.nickName}}</td>
+                <td>{{entity.sex}}</td>
 
                 <td class="text-center">
-                    <button type="button" class="btn bg-olive btn-xs" ng-click="findOne(entity.sellerId)"
+                    <button type="button" class="btn bg-olive btn-xs" ng-click="findOne(entity.id)"
                             data-toggle="modal" data-target="#editModal">详情
                     </button>
                 </td>
@@ -99,69 +95,69 @@
                 <div class="modal-content">
                     <div class="modal-header">
                         <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
-                        <h3 id="myModalLabel">{{entity.name}}的详情</h3>
+                        <h3 id="myModalLabel">{{entity.username}}的详情</h3>
                     </div>
                     <div class="modal-body">
                         <table class="table table-bordered table-striped" width="800px">
                             <tr>
-                                <td>店铺名称</td>
+                                <td>用户名</td>
                                 <td><input ng-model="entity.name" readonly class="form-control"
-                                           placeholder="{{entity.nickName}}"></td>
+                                           placeholder="{{entity.username}}"></td>
                             </tr>
                             <tr>
-                                <td>商家邮箱</td>
+                                <td>注册手机号</td>
+                                <td><input ng-model="entity.firstChar" readonly class="form-control"
+                                           placeholder="{{entity.phone}}"></td>
+                            </tr>
+                            <tr>
+                                <td>注册邮箱</td>
                                 <td><input ng-model="entity.firstChar" readonly class="form-control"
                                            placeholder="{{entity.email}}"></td>
                             </tr>
                             <tr>
-                                <td>公司手机</td>
+                                <td>会员来源</td>
                                 <td><input ng-model="entity.firstChar" readonly class="form-control"
-                                           placeholder="{{entity.mobile}}"></td>
+                                           placeholder="{{entity.sourceType}}"></td>
                             </tr>
                             <tr>
-                                <td>公司电话</td>
+                                <td>昵称</td>
                                 <td><input ng-model="entity.firstChar" readonly class="form-control"
-                                           placeholder="{{entity.telephone}}"></td>
+                                           placeholder="{{entity.nickName}}"></td>
                             </tr>
                             <tr>
-                                <td>详细地址</td>
+                                <td>真实姓名</td>
                                 <td><input ng-model="entity.firstChar" readonly class="form-control"
-                                           placeholder="{{entity.addressDetail}}"></td>
+                                           placeholder="{{entity.name}}"></td>
                             </tr>
                             <tr>
-                                <td>联系人姓名</td>
+                                <td>使用状态</td>
                                 <td><input ng-model="entity.firstChar" readonly class="form-control"
-                                           placeholder="{{entity.linkmanName}}"></td>
+                                           placeholder="{{entity.status}}"></td>
                             </tr>
                             <tr>
-                                <td>联系人QQ</td>
+                                <td>头像地址</td>
                                 <td><input ng-model="entity.firstChar" readonly class="form-control"
-                                           placeholder="{{entity.linkmanQq}}"></td>
+                                           placeholder="{{entity.headPic}}"></td>
                             </tr>
                             <tr>
-                                <td>联系人电话</td>
+                                <td>QQ号码</td>
                                 <td><input ng-model="entity.firstChar" readonly class="form-control"
-                                           placeholder="{{entity.linkmanMobile}}"></td>
+                                           placeholder="{{entity.qq}}"></td>
                             </tr>
                             <tr>
-                                <td>联系人EMAIL</td>
+                                <td>手机是否验证</td>
                                 <td><input ng-model="entity.firstChar" readonly class="form-control"
-                                           placeholder="{{entity.linkmanEmail}}"></td>
+                                           placeholder="{{entity.isMobileCheck}}"></td>
                             </tr>
                             <tr>
-                                <td>营业执照号</td>
+                                <td>邮箱是否检测</td>
                                 <td><input ng-model="entity.firstChar" readonly class="form-control"
-                                           placeholder="{{entity.licenseNumber}}"></td>
+                                           placeholder="{{entity.isEmailCheck}}"></td>
                             </tr>
                             <tr>
-                                <td>税务登记证号</td>
+                                <td>性别</td>
                                 <td><input ng-model="entity.firstChar" readonly class="form-control"
-                                           placeholder="{{entity.taxNumber}}"></td>
-                            </tr>
-                            <tr>
-                                <td>组织机构代码</td>
-                                <td><input ng-model="entity.firstChar" readonly class="form-control"
-                                           placeholder="{{entity.orgNumber}}"></td>
+                                           placeholder="{{entity.sex}}"></td>
                             </tr>
                             <tr>
                                 <td>公司地址</td>
@@ -169,34 +165,29 @@
                                            placeholder="{{entity.address}}"></td>
                             </tr>
                             <tr>
-                                <td>公司LOGO图</td>
+                                <td>会员等级</td>
                                 <td><input ng-model="entity.firstChar" readonly class="form-control"
-                                           placeholder="{{entity.logoPic}}"></td>
+                                           placeholder="{{entity.userLevel}}"></td>
                             </tr>
                             <tr>
-                                <td>简介</td>
+                                <td>积分</td>
                                 <td><input ng-model="entity.firstChar" readonly class="form-control"
-                                           placeholder="{{entity.brief}}"></td>
+                                           placeholder="{{entity.points}}"></td>
                             </tr>
                             <tr>
-                                <td>创建日期</td>
+                                <td>经验值</td>
                                 <td><input ng-model="entity.firstChar" readonly class="form-control"
-                                           placeholder="{{entity.createTime}}"></td>
+                                           placeholder="{{entity.experienceValue}}"></td>
                             </tr>
                             <tr>
-                                <td>法定代表人</td>
+                                <td>生日</td>
                                 <td><input ng-model="entity.firstChar" readonly class="form-control"
-                                           placeholder="{{entity.legalPerson}}"></td>
+                                           placeholder="{{entity.birthday}}"></td>
                             </tr>
                             <tr>
-                                <td>法定代表人身份证</td>
+                                <td>最后登录时间</td>
                                 <td><input ng-model="entity.firstChar" readonly class="form-control"
-                                           placeholder="{{entity.bankUser}}"></td>
-                            </tr>
-                            <tr>
-                                <td>开户行</td>
-                                <td><input ng-model="entity.firstChar" readonly class="form-control"
-                                           placeholder="{{entity.bankName}}"></td>
+                                           placeholder="{{entity.lastLoginTime}}"></td>
                             </tr>
 
                         </table>
