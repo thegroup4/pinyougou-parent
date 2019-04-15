@@ -1,0 +1,406 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <!-- 页面meta -->
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <title>运营商销售统计</title>
+    <!-- Tell the browser to be responsive to screen width -->
+    <meta content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no" name="viewport">
+    <link rel="stylesheet" href="../plugins/bootstrap/css/bootstrap.min.css">
+    <link rel="stylesheet" href="../plugins/adminLTE/css/AdminLTE.css">
+    <link rel="stylesheet" href="../plugins/adminLTE/css/skins/_all-skins.min.css">
+    <link rel="stylesheet" href="../css/style.css">
+	<script src="../plugins/jQuery/jquery-2.2.3.min.js"></script>
+    <script src="../plugins/bootstrap/js/bootstrap.min.js"></script>
+
+    <!-- 引入echarts.js-->
+    <script type="text/javascript" src="../plugins/echarts.js"></script>
+
+</head>
+
+<body class="hold-transition skin-red sidebar-mini">
+                
+    <div class="box-header with-border">
+        <h3 class="box-title">销售统计</h3>
+    </div>
+    <div class="box-header with-border" style="margin-left:720px">
+        开始时间:<input type="date" id="beginDate">
+        结束时间:<input type="date" id="endDate">
+        <input id="select" class="btn btn-default" type="button" value="查询">
+    </div>
+    <div class="box-body with-border">
+        <!--折线图-->
+        <div class="box-tools pull-left" style="margin-left: 0px;margin-top: 60px">
+            <div id="main" style="width: 580px;height:350px;"></div>
+        </div>
+        <!--饼状图-->
+        <div class="box-tools pull-right" style="margin-right: 30px;margin-top: 60px">
+            <div id="bar" style="width: 580px;height:350px;"></div>
+        </div>
+    </div>
+
+  <script type="text/javascript" >
+      // 基于准备好的dom，初始化echarts实例
+      // 指定图表的配置项和数据
+      var myChart = echarts.init(document.getElementById('main'));
+      var nameList = [];    //类别数组（实际用来盛放X轴坐标值）
+      var dataList = [];    //销量数组（实际用来盛放Y坐标值）
+
+      var today=new Date();//今天的时间
+      day=today.getDate();//求今天的日
+      month=today.getMonth()+1;//今天的月
+      year=today.getFullYear();//今天的年
+
+      //计算开始日期
+      beginDay=day>7?day-7:1;
+      //日补零
+      day=day<10?"0"+day:day;
+      beginDay=beginDay<10?"0"+beginDay:beginDay;
+      //月补零
+      month=month<10?"0"+month:month;
+      var beginDate=year+"-"+month+"-"+beginDay;
+      var endDate=year+"-"+month+"-"+day;
+
+      $("#beginDate").val(beginDate);
+      $("#endDate").val(endDate);
+
+      /*alert(typeof $("#beginDate").val());
+      alert(typeof $("#endDate").val());*/
+
+      // 指定图表的配置项和数据
+      var option = {
+          /*标题及显示位置*/
+          title: {
+              text: '销量统计折线图',
+              subtext: '数据来自品优购电子商城',
+              x: 'center'
+          },
+          /*指向标*/
+          legend: {
+              data:['销量'],
+              x: 'left'
+          },
+          /*工具栏*/
+          toolbox: {
+              show: true,//是否显示工具栏组件
+              showTitle:true,//是否在鼠标 hover 的时候显示每个工具 icon 的标题
+              feature: {
+                  dataZoom: { //数据缩放视图
+                      show: true,
+                      yAxisIndex: 'none'
+                  },
+                  dataView: {//数据视图工具，可以展现当前图表所用的数据，编辑后可以动态更新。
+                      show: true,//是否显示组件。
+                      readOnly: false
+                  },
+                  restore: {//配置项还原
+                      show: true
+                  },
+                  saveAsImage: {//保存为图片
+                      show: true
+                  }
+              },
+              right:'15'
+          },
+          grid: {
+              left: '3%',
+              right: '4%',
+              bottom: '3%',
+              containLabel: true
+          },
+          /*放大缩小*/
+          dataZoom: [
+              {
+                  type: 'inside'
+              }
+          ],
+          /*鼠标移动到折线上 显示信息*/
+          tooltip: {
+              trigger: 'axis'
+          },
+
+          /*x轴*/
+          xAxis: {
+              type: 'category',
+              boundaryGap: false,
+              data: [nameList],
+              axisLine: {
+                  lineStyle: {
+                      color: '#1F618D' // X轴及其文字颜色
+                  }
+              }
+          },
+          /*y轴*/
+          yAxis: {
+              name: '销量(件/日)',
+              type: 'value',
+              axisLine: {
+                  lineStyle: {
+                      color: '#AF7AC5' // y轴及其文字颜色
+                  }
+              },
+              axisLabel: {
+                  formatter: '{value} 件'
+              }
+          },
+          /*折线图内数据*/
+          series: [
+              {
+                  name:'销量',
+                  data: [dataList],
+                  type: 'line',
+                  color: ['#CD6155'], //折线颜色
+                  markPoint: {
+                      data: [
+                          {type: 'max', name: '最大值'},
+                          {type: 'min', name: '最小值'}
+                      ]
+                  },
+                  markLine: {
+                      data: [
+                          {type: 'average', name: '平均值'}
+                      ]
+                  }
+              },
+              {
+                  name:'最低件数',
+                  type:'line',
+                  data:[dataList],
+                  markPoint: {
+                      data: [
+                          {name: '月最低', value: -2, xAxis: 1, yAxis: -1.5}
+                      ]
+                  },
+                  markLine: {
+                      data: [
+                          {type: 'average', name: '平均值'},
+                          [{
+                              symbol: 'none',
+                              x: '90%',
+                              yAxis: 'max'
+                          }, {
+                              symbol: 'circle',
+                              label: {
+                                  normal: {
+                                      position: 'start',
+                                      formatter: '最大值'
+                                  }
+                              },
+                              type: 'max',
+                              name: '最高点'
+                          }]
+                      ]
+                  }
+              }
+          ]
+      };
+      /*折线图显示前的加载动画*/
+      myChart.showLoading({
+          text: '正在玩命加载中...',
+          textStyle: { fontSize : 30 , color: '#444' },
+          effectOption: {backgroundColor: 'rgba(0, 0, 0, 0)'}
+      });
+
+      $.ajax({
+          type: "post",
+          async: true,//异步请求
+          url: "../echarts/line.do",
+          data: {
+              beginDate: $("#beginDate").val(),
+              endDate: $("#endDate").val()
+          },
+          dataType: "json", //返回数据形式为json
+          success: function (data) {
+              //请求成功时执行该函数内容，data即为服务器返回的json对象
+              if (data != null) {
+                  for (var i in data) {
+                      nameList.push(data[i].name);//挨个取出类别并添加到类别数组
+                  }
+                  for (var i in data) {
+                      dataList.push(data[i].value);//挨个取出销量并添加到销量数组
+                  }
+                  myChart.hideLoading();//隐藏加载动画
+                  myChart.setOption({//加载数据图表
+                      xAxis: {
+                          data: nameList
+                      },
+                      series: [{
+                          //根据名字对应到相应的系列
+                          data: dataList
+                      }]
+                  });
+              }
+          },
+      });
+
+      $("#select").click(function () {
+          nameList=[];
+          dataList=[];
+            $.ajax({
+                type: "post",
+                async: true,//异步请求
+                url: "../echarts/line.do",
+                data: {
+                    beginDate: $("#beginDate").val(),
+                    endDate: $("#endDate").val()
+                },
+                dataType: "json", //返回数据形式为json
+                success: function (data) {
+                    //请求成功时执行该函数内容，data即为服务器返回的json对象
+                    if (data != null) {
+                        for (var i in data) {
+                            nameList.push(data[i].name);//挨个取出类别并添加到类别数组
+                        }
+                        for (var i in data) {
+                            dataList.push(data[i].value);//挨个取出销量并添加到销量数组
+                        }
+                        myChart.hideLoading();//隐藏加载动画
+                        myChart.setOption({//加载数据图表
+                            xAxis: {
+                                data: nameList
+                            },
+                            series: [{
+                                //根据名字对应到相应的系列
+                                data: dataList
+                            }]
+                        });
+                    }
+                },
+            });
+      });
+
+      var zoomSize = 50;//放大缩小
+      myChart.on('click', function (params) {
+          console.log(name[Math.max(params.dataIndex - zoomSize / 2, 0)]);
+          myChart.dispatchAction({
+              type: 'dataZoom',
+          });
+      });
+      myChart.setOption(option);
+  </script>
+  <!--饼状图-->
+  <script type="text/javascript" >
+      // 基于准备好的dom，初始化echarts实例
+      var myChart2 = echarts.init(document.getElementById('bar'));
+      var nameList2 = [];    //月份数组（用来放置图标）
+
+      var today=new Date();//今天的时间
+      day=today.getDate();//求今天的日
+      month=today.getMonth()+1;//今天的月
+      year=today.getFullYear();//今天的年
+
+      //计算开始日期
+      beginDay=day>7?day-7:1;
+      //日补零
+      day=day<10?"0"+day:day;
+      beginDay=beginDay<10?"0"+beginDay:beginDay;
+      //月补零
+      month=month<10?"0"+month:month;
+      var beginDate=year+"-"+month+"-"+beginDay;
+      var endDate=year+"-"+month+"-"+day;
+
+      $("#beginDate").val(beginDate);
+      $("#endDate").val(endDate);
+
+      // 指定图表的配置项和数据
+      var option2 = {
+          title : {
+              text: '销量统计饼状图',
+              subtext: '数据来自品优购电子商城',
+              x:'center'
+          },
+          tooltip : {
+              trigger: 'item',
+              formatter: "{a} <br/>{b} : {c} ({d}%)"
+          },
+          legend: {
+              orient: 'vertical',
+              right:'right',
+              data: []
+          },
+          series : [
+              {
+                  name: '销量',
+                  type: 'pie',
+                  radius : '60%',
+                  center: ['45%', '55%'],
+                  data:[],
+                  itemStyle: {
+                      emphasis: {
+                          shadowBlur: 10,
+                          shadowOffsetX: 0,
+                          shadowColor: 'rgba(0, 0, 0, 0.5)'
+                      }
+                  }
+              }
+          ]
+      };
+      /*折线图显示前的加载动画*/
+      myChart2.showLoading({
+          text: '正在玩命加载中...',
+          textStyle: { fontSize : 30 , color: '#444' },
+          effectOption: {backgroundColor: 'rgba(0, 0, 0, 0)'}
+      });
+      $.ajax({
+          type: "post",
+          async: true,//异步请求
+          url: "../echarts/pie.do",
+          data: {},
+          data: {},
+          dataType: "json", //返回数据形式为json
+          success: function (data) {
+              //请求成功时执行该函数内容，data即为服务器返回的json对象
+              if (data != null) {
+                  for (var i in data) {
+                      nameList2.push(data[i].name);//挨个取出月份并添加到月份数组
+                  }
+                  myChart2.hideLoading();    //隐藏加载动画
+                  myChart2.setOption({       //加载数据图表
+                      legend: {
+                          data: nameList2
+                      },
+                      series:[{
+                          //根据名字对应到相应的系列
+                          data:data
+                      }]
+                  });
+              }
+          },
+      });
+      $("#select").click(function () {
+          $.ajax({
+              type: "post",
+              async: true,//异步请求
+              url: "../echarts/pie.do",
+              data: {
+                  beginDate: $("#beginDate").val(),
+                  endDate: $("#endDate").val()
+              },
+              dataType: "json", //返回数据形式为json
+              success: function (data) {
+                  //请求成功时执行该函数内容，data即为服务器返回的json对象
+                  if (data != null) {
+                      for (var i in data) {
+                          nameList2.push(data[i].name);//挨个取出月份并添加到月份数组
+                      }
+                      myChart2.hideLoading();    //隐藏加载动画
+                      myChart2.setOption({       //加载数据图表
+                          legend: {
+                              data: nameList2
+                          },
+                          series:[{
+                              //根据名字对应到相应的系列
+                              data:data
+                          }]
+                      });
+                  }
+              },
+          });
+      })
+      // 使用刚指定的配置项和数据显示图表。
+      myChart2.setOption(option2);
+  </script>
+</body>
+</html>

@@ -530,4 +530,35 @@
       seller_id = #{sellerId,jdbcType=VARCHAR}
     where order_id = #{orderId,jdbcType=BIGINT}
   </update>
+
+  <!--折线图所需的日期和数量-->
+  <select id="findOrderForLine" resultType="map">
+    SELECT
+    DATE_FORMAT(o.update_time,'%Y年%c月%e日') name,count(o.order_id) value
+    FROM
+    tb_order o,tb_order_item oi
+    WHERE o.order_id=oi.order_id
+    <if test="beginDate != null and beginDate != ''">
+      AND o.update_time &gt;= #{beginDate}
+    </if>
+    <if test="endDate != null and endDate != ''">
+      AND o.update_time &lt;= #{endDate}
+    </if>
+    GROUP BY name ORDER BY o.update_time
+  </select>
+  <!--饼状图所需的日期和数量-->
+  <select id="findOrderForPie" resultType="map">
+    SELECT
+    DATE_FORMAT(o.update_time,'%Y年%c月') name,count(o.order_id) value
+    FROM
+    tb_order o,tb_order_item oi
+    WHERE o.order_id=oi.order_id
+    <if test="beginDate != null and beginDate != ''">
+      AND o.update_time &gt;= #{beginDate}
+    </if>
+    <if test="endDate != null and endDate != ''">
+      AND o.update_time &lt;= #{endDate}
+    </if>
+    GROUP BY name ORDER BY o.update_time
+  </select>
 </mapper>

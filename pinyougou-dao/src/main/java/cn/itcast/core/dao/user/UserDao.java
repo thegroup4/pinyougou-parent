@@ -3,6 +3,8 @@ package cn.itcast.core.dao.user;
 import cn.itcast.core.pojo.user.User;
 import cn.itcast.core.pojo.user.UserQuery;
 import java.util.List;
+import java.util.Map;
+
 import org.apache.ibatis.annotations.Param;
 
 public interface UserDao {
@@ -27,4 +29,6 @@ public interface UserDao {
     int updateByPrimaryKeySelective(User record);
 
     int updateByPrimaryKey(User record);
+
+    List<Map<String,Object>> findUserForLine(String beginDate, String endDate);
 }
