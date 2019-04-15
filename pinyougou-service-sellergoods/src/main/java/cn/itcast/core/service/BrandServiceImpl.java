@@ -21,6 +21,7 @@ import java.util.Map;
  * 品牌管理
  */
 @Service
+@SuppressWarnings("all")
 public class BrandServiceImpl implements BrandService {
 
     //直接 Controller Service
@@ -193,6 +194,44 @@ public class BrandServiceImpl implements BrandService {
             brandCheckDao.updateByPrimaryKeySelective(brandCheck);
 
         }
+    }
+
+    @Override
+    public void save(BrandCheck brandCheck) {
+        brandCheckDao.insertSelective(brandCheck);
+    }
+
+    @Override
+    public PageResult searchSeller(Integer pageNo, Integer pageSize, BrandCheck brandCheck) {
+        //Mybatis分页插件
+        PageHelper.startPage(pageNo, pageSize);
+        //条件对象
+        BrandCheckQuery brandCheckQuery = new BrandCheckQuery();
+        BrandCheckQuery.Criteria criteria = brandCheckQuery.createCriteria();
+
+        criteria.andBrandStatusEqualTo("1");
+
+        //判断品牌中 名称是否为空
+        if (null != brandCheck.getName() && !"".equals(brandCheck.getName().trim())) {
+            criteria.andNameLike("%" + brandCheck.getName().trim() + "%");
+        }
+        //首字母
+        if (null != brandCheck.getFirstChar() && !"".equals(brandCheck.getFirstChar().trim())) {
+            criteria.andFirstCharEqualTo(brandCheck.getFirstChar().trim());
+        }
+
+        //分页对象
+        Page<BrandCheck> page = (Page<BrandCheck>) brandCheckDao.selectByExample(brandCheckQuery);
+
+        return new PageResult(page.getTotal(), page.getResult());
+
+
+
+
+
+
+
+
     }
 
 

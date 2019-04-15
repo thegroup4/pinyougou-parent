@@ -32,27 +32,22 @@ public class UserController {
         return pageResult;
     }
     @RequestMapping("/updateStatus")
-    public Result updateStatus(String status,Long[] ids){
+    public Result updateStatus(String status,Long[] ids) {
 
         try {
-            userService.updateStatus(ids,status);
-           return new  Result(true,"修改成功");
+            userService.updateStatus(ids, status);
+            return new Result(true, "修改成功");
         } catch (Exception e) {
             e.printStackTrace();
-            return new  Result(false,"修改是失败");
+            return new Result(false, "修改是失败");
         }
-
+    }
     @RequestMapping("/findCount")
     public int findAll(){
         return userService.findCount();
     }
 
-    @RequestMapping("/search")
-    public PageResult search(Integer page, Integer rows , @RequestBody User user){
-        //运营商后台管理商品的时候 对所有商家进行统一处理
 
-        return  userService.search(page,rows,user);
-    }
     @RequestMapping("/findOne")
     public User findOne(Long id){
         return userService.findOne(id);

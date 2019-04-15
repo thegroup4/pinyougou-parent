@@ -1,6 +1,8 @@
 package entity;
 
-public class SysLog {
+import java.io.Serializable;
+
+public class SysLog implements Serializable {
     private Long id;
     private String visitTime;
     private String username;

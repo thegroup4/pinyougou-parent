@@ -12,6 +12,7 @@ import cn.itcast.core.pojo.item.Item;
 import cn.itcast.core.pojo.log.PayLog;
 import cn.itcast.core.pojo.order.Order;
 import cn.itcast.core.pojo.order.OrderItem;
+import cn.itcast.core.pojo.order.OrderItemQuery;
 import cn.itcast.core.pojo.order.OrderQuery;
 import cn.itcast.core.pojo.order.OrderItemQuery;
 import cn.itcast.core.pojo.order.OrderQuery;
@@ -32,6 +33,7 @@ import java.util.*;
  */
 @Service
 @Transactional
+@SuppressWarnings("all")
 public class OrderServiceImpl implements OrderService {
 
     @Autowired
@@ -47,6 +49,8 @@ public class OrderServiceImpl implements OrderService {
     @Autowired
     private PayLogDao payLogDao;
 
+    @Autowired
+    private GoodsDao goodsDao;
     @Override
     public void add(Order order) {
 
@@ -158,7 +162,6 @@ public class OrderServiceImpl implements OrderService {
 
     @Override
     public List<Map> orderStatistics(Date startDate, Date endDate,String name) {
-        name = "qiandu";
         List<Map> listMap = new ArrayList<>();
 
 
@@ -273,6 +276,7 @@ public class OrderServiceImpl implements OrderService {
 
         return order;
     }
+
 
 
 }

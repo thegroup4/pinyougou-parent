@@ -2,7 +2,7 @@
 app.controller("brandController",function($scope,$controller,$http,brandService){
 	// AngularJS中的继承:伪继承
 	$controller('baseController',{$scope:$scope});
-	
+
 	// 查询所有的品牌列表的方法:
 	$scope.findAll = function(){
 		// 向后台发送请求:
@@ -19,7 +19,7 @@ app.controller("brandController",function($scope,$controller,$http,brandService)
 			$scope.list = response.rows;
 		});
 	}
-	
+
 	// 保存品牌的方法:
 	$scope.save = function(){
 		// 区分是保存还是修改
@@ -52,7 +52,8 @@ app.controller("brandController",function($scope,$controller,$http,brandService)
 			$scope.entity = response;
 		});
 	}
-	
+
+
 	// 删除品牌:
 	$scope.dele = function(){
 		brandService.dele($scope.selectIds).success(function(response){
@@ -68,7 +69,8 @@ app.controller("brandController",function($scope,$controller,$http,brandService)
 			}
 		});
 	}
-	
+    $scope.status = ["待审核","审核通过","审核未通过"];
+
 	$scope.searchEntity={};
 	
 	// 假设定义一个查询的实体：searchEntity

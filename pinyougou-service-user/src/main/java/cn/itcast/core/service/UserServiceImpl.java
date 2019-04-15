@@ -1,8 +1,14 @@
 package cn.itcast.core.service;
 
+import cn.itcast.common.utils.DateUtils;
+import cn.itcast.core.dao.log.LogDao;
 import cn.itcast.core.dao.user.UserDao;
 import cn.itcast.core.pojo.user.User;
+import cn.itcast.core.pojo.user.UserQuery;
 import com.alibaba.dubbo.config.annotation.Service;
+import com.github.pagehelper.Page;
+import com.github.pagehelper.PageHelper;
+import entity.PageResult;
 import org.apache.commons.lang3.RandomStringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.RedisTemplate;
@@ -60,8 +66,7 @@ public class UserServiceImpl implements  UserService {
 
     }
 
-    @Autowired
-    private UserDao userDao;
+
     //用户添加
     @Override
     public void add(String smscode, User user) {
