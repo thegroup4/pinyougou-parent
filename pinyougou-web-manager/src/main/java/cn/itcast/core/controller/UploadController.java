@@ -16,7 +16,6 @@ import org.springframework.web.multipart.MultipartFile;
 @RequestMapping("/upload")
 public class UploadController {
 
-
     //图片服务器ＵＲＬ
     @Value("${FILE_SERVER_URL}")
     private String FILE_SERVER_URL;
@@ -24,7 +23,6 @@ public class UploadController {
     //上传商品图片
     @RequestMapping("/uploadFile")
     public Result uploadFile(MultipartFile file){ //配置一个实现类
-
 
         //接收图片
         try {

@@ -17,10 +17,14 @@ import org.springframework.jms.core.JmsTemplate;
 import org.springframework.jms.core.MessageCreator;
 import org.springframework.transaction.annotation.Transactional;
 
+<<<<<<< Updated upstream
 import javax.jms.Destination;
 import javax.jms.JMSException;
 import javax.jms.Message;
 import javax.jms.Session;
+=======
+
+>>>>>>> Stashed changes
 import java.util.List;
 
 /**
@@ -102,6 +106,7 @@ public class ItemCatServiceImpl implements ItemCatService {
     }
 
     @Override
+<<<<<<< Updated upstream
     public void updateStatus(Long[] ids, String status) {
 
         ItemCat1 itemCat1 = new ItemCat1();
@@ -119,4 +124,41 @@ public class ItemCatServiceImpl implements ItemCatService {
     }
 
 
+=======
+    public List<ItemCat> findAllItemCatList() {
+        //一级分类
+        ItemCatQuery query1 = new ItemCatQuery();
+        ItemCatQuery.Criteria criteria1 = query1.createCriteria();
+        criteria1.andParentIdEqualTo(0L);
+        List<ItemCat> itemCatList1 = itemCatDao.selectByExample(query1);
+        int size =itemCatList1.size();
+        for (int i = size-1; i >=0; i--) {
+            if (i>=15&&i<size){
+                itemCatList1.remove(i);
+            }else {
+                break;
+            }
+        }
+        System.out.println(itemCatList1.size());
+        //二级分类
+        for (ItemCat itemCat : itemCatList1) {
+            Long id1 = itemCat.getId();
+            ItemCatQuery query2 = new ItemCatQuery();
+            ItemCatQuery.Criteria criteria2 = query2.createCriteria();
+            criteria2.andParentIdEqualTo(id1);
+            List<ItemCat> itemCatList2 = itemCatDao.selectByExample(query2);
+            itemCat.setItemCatList(itemCatList2);
+            //三级分类
+            for (ItemCat cat : itemCatList2) {
+                Long id2 = cat.getId();
+                ItemCatQuery query3 = new ItemCatQuery();
+                ItemCatQuery.Criteria criteria3 = query3.createCriteria();
+                criteria3.andParentIdEqualTo(id2);
+                List<ItemCat> itemCatList3 = itemCatDao.selectByExample(query3);
+                cat.setItemCatList(itemCatList3);
+            }
+        }
+        return itemCatList1;
+    }
+>>>>>>> Stashed changes
 }

@@ -16,5 +16,12 @@ app.controller("contentController",function($scope,contentService){
 	$scope.search=function(){
 		location.href="http://localhost:9103/search.html#?keywords="+$scope.keywords;
 	}
-	
+  
+//查询全部分类
+    $scope.findAll = function(){
+        contentService.findAll().success(function(response){
+            $scope.ItemCatList = response;
+        });
+   
+	 }
 });

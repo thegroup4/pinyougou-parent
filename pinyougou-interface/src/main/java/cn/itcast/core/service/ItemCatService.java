@@ -13,9 +13,13 @@ public interface ItemCatService {
 
     List<ItemCat> findAll();
 
+<<<<<<< Updated upstream
     PageResult search(Integer page, Integer rows, ItemCat1 itemCat1);
 
     void updateStatus(Long[] ids, String status);
 
     void saveStatus(ItemCat1 itemCat1);
+=======
+    List<ItemCat> findAllItemCatList();
+>>>>>>> Stashed changes
 }
