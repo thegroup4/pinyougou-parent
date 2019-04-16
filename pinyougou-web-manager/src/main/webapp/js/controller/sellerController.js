@@ -1,5 +1,5 @@
  //控制层 
-app.controller('sellerController' ,function($scope,$controller   ,sellerService){	
+app.controller('sellerController' ,function($scope,$controller ,sellerService,sellerUserService){
 	
 	$controller('baseController',{$scope:$scope});//继承
 	
@@ -23,8 +23,8 @@ app.controller('sellerController' ,function($scope,$controller   ,sellerService)
 	}
 	
 	//查询实体 
-	$scope.findOne=function(id){				
-		sellerService.findOne(id).success(
+	$scope.findOne=function(sellerId){
+		sellerService.findOne(sellerId).success(
 			function(response){
 				$scope.entity= response;					
 			}
@@ -68,14 +68,14 @@ app.controller('sellerController' ,function($scope,$controller   ,sellerService)
 	$scope.searchEntity={};//定义搜索对象 
 	
 	//搜索
-	$scope.search=function(page,rows){			
+	$scope.search=function(page,rows){
 		sellerService.search(page,rows,$scope.searchEntity).success(
 			function(response){
 				$scope.list=response.rows;	
 				$scope.paginationConf.totalItems=response.total;//更新总记录数
 			}			
 		);
-	}
+	};
     
 	$scope.updateStatus = function(sellerId,status){
 		sellerService.updateStatus(sellerId,status).success(function(response){
@@ -86,5 +86,25 @@ app.controller('sellerController' ,function($scope,$controller   ,sellerService)
 				alert(response.message);
 			}
 		});
-	}
+	};
+
+
+    $scope.sellerFindCount=function(){
+        sellerService.sellerFindCount().success(
+            function(response){
+                $scope.sellerNum=response;
+            }
+        );
+        sellerUserService.userFindCount().success(
+            function(response){
+                $scope.userNum=response;
+            }
+        );
+        sellerUserService.findActiveCount().success(
+            function(response){
+                $scope.activeNum=response;
+            }
+        );
+
+    }
 });	

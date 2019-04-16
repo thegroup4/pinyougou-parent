@@ -2,7 +2,9 @@
 <web-app xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
 	xmlns="http://java.sun.com/xml/ns/javaee"
 	xsi:schemaLocation="http://java.sun.com/xml/ns/javaee http://java.sun.com/xml/ns/javaee/web-app_2_5.xsd"
-	version="2.5">	
+	version="2.5">
+
+
    <!-- 解决post乱码 -->
 	<filter>
 		<filter-name>CharacterEncodingFilter</filter-name>
@@ -19,7 +21,11 @@
 	<filter-mapping>
 		<filter-name>CharacterEncodingFilter</filter-name>
 		<url-pattern>/*</url-pattern>
-	</filter-mapping>	
+	</filter-mapping>
+	<!--请求对象的监听器，监听是否请求了，如果请求，在spring容器中创建请求对象-->
+	<listener>
+		<listener-class>org.springframework.web.context.request.RequestContextListener</listener-class>
+	</listener>
 	
 	<!-- Spring Security 权限配置-->
 	<context-param>
