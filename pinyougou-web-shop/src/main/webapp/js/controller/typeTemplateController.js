@@ -13,8 +13,9 @@ app.controller('typeTemplateController' ,function($scope,$controller,brandServic
 	}    
 	
 	//分页
-	$scope.findPage=function(page,rows){			
-		typeTempService.findPage1(page,rows).success(
+    $scope.status = ["未审核", "审核通过", "审核未通过", "关闭"];
+	$scope.findPage=function(page,rows,status){
+		typeTempService.findPage1(page,rows,status).success(
 			function(response){
 				$scope.list=response.rows;	
 				$scope.paginationConf.totalItems=response.total;//更新总记录数
@@ -74,7 +75,8 @@ app.controller('typeTemplateController' ,function($scope,$controller,brandServic
 	$scope.searchEntity={};//定义搜索对象 
 	
 	//搜索
-	$scope.search=function(page,rows){			
+
+	$scope.search=function(page,rows){
 		typeTempService.search1(page,rows,$scope.searchEntity).success(
 			function(response){
 				$scope.list=response.rows;	

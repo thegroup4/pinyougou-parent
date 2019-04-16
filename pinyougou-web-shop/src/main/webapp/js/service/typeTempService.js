@@ -6,8 +6,8 @@ app.service('typeTempService',function($http){
 		return $http.get('../typeTemp/findAll.do');
 	}
 	//分页 
-	this.findPage1=function(page,rows){
-		return $http.get('../typeTemp/findPage.do?page='+page+'&rows='+rows);
+	this.findPage1=function(page,rows,status){
+		return $http.get('../typeTemp/findPage.do?page='+page+'&rows='+rows+"&status="+status);
 	}
 	//查询实体
 	this.findOne1=function(id){

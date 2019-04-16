@@ -91,7 +91,7 @@
                 <td>{{jsonToString(entity.brandIds,'text')}}</td>
                 <td>{{jsonToString(entity.specIds,'text')}}</td>
                 <td>{{jsonToString(entity.customAttributeItems,'text')}}</td>
-                <td>{{entity.templateStatus}}</td>
+                <td><span>{{status[entity.templateStatus]}}</span></td>
                 <td class="text-center">
                     <button type="button" class="btn bg-olive btn-xs" ng-click="findOne(entity.id)" data-toggle="modal" data-target="#editModal" >修改</button>
                 </td>

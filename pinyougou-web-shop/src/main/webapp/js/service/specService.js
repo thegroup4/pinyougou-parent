@@ -1,8 +1,8 @@
 app.service('specService', function ($http) {
 
     //分页
-    this.search=function(page,rows){
-        return $http.get('../spec/search.do?page='+page+'&rows='+rows);
+    this.search=function(page,rows,status){
+        return $http.get('../spec/search.do?page='+page+'&rows='+rows+"&status="+status);
     }
     //增加
     this.add=function(entity){

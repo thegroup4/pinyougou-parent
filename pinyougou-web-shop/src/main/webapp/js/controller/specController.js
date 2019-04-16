@@ -3,8 +3,9 @@ app.controller('specController', function ($scope, $controller, specService) {
     $controller('baseController', {$scope: $scope});//继承
 
     //分页
-    $scope.search = function (page, rows) {
-        specService.search(page, rows).success(
+    $scope.status = ["未审核", "审核通过", "审核未通过", "关闭"];
+    $scope.search = function (page, rows,status) {
+        specService.search(page, rows,status).success(
             function (response) {
                 $scope.list = response.rows;
                 $scope.paginationConf.totalItems = response.total;//更新总记录数
