@@ -11,6 +11,10 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import vo.GoodsVo;
 
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
 /**
  * 商品管理
  */
@@ -22,6 +26,7 @@ public class GoodsController {
 
     @Reference
     private GoodsService goodsService;
+
     //商品添加
     @RequestMapping("/add")
     public Result add(@RequestBody GoodsVo vo){
@@ -61,4 +66,25 @@ public class GoodsController {
     public GoodsVo findOne(Long id){
         return goodsService.findOne(id);
     }
+
+
+    @RequestMapping("/findGoodsListBySellerId")
+    public List<GoodsVo> findGoodsListBySellerId(){
+        String sellerId = SecurityContextHolder.getContext().getAuthentication().getName();
+        return goodsService.findGoodsListBySellerId(sellerId);
+    }
+
+    @RequestMapping("/findGoodsById")
+    public Map findGoodsById(Long goodsId){
+
+        GoodsVo goodsVo = goodsService.findOne(goodsId);
+        Map<String, Object> map = new HashMap<>();
+        map.put("name",goodsVo.getGoods().getGoodsName());
+        map.put("goodsId",goodsVo.getGoods().getId());
+        map.put("price",goodsVo.getGoods().getPrice());
+        map.put("stockCount",goodsVo.getItemList().size());
+        return map;
+
+    }
+
 }

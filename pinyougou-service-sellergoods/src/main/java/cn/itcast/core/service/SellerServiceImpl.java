@@ -45,7 +45,7 @@ public class SellerServiceImpl implements  SellerService {
     //根据用户名查询一个商家 要求此商家必须审核通过
     @Override
     public Seller findBySellerId(String username) {
-
+        System.out.println(111);
         return sellerDao.selectByPrimaryKey(username);
     }
 }

@@ -91,7 +91,7 @@ public class Item implements Serializable {
 
     private String itemSn;
 
-    private BigDecimal costPirce;
+    private BigDecimal costPrice;
 
     private BigDecimal marketPrice;
 
@@ -230,12 +230,12 @@ public class Item implements Serializable {
         this.itemSn = itemSn == null ? null : itemSn.trim();
     }
 
-    public BigDecimal getCostPirce() {
-        return costPirce;
+    public BigDecimal getCostPrice() {
+        return costPrice;
     }
 
-    public void setCostPirce(BigDecimal costPirce) {
-        this.costPirce = costPirce;
+    public void setCostPrice(BigDecimal costPrice) {
+        this.costPrice = costPrice;
     }
 
     public BigDecimal getMarketPrice() {
@@ -329,7 +329,7 @@ public class Item implements Serializable {
         sb.append(", createTime=").append(createTime);
         sb.append(", updateTime=").append(updateTime);
         sb.append(", itemSn=").append(itemSn);
-        sb.append(", costPirce=").append(costPirce);
+        sb.append(", costPirce=").append(costPrice);
         sb.append(", marketPrice=").append(marketPrice);
         sb.append(", isDefault=").append(isDefault);
         sb.append(", goodsId=").append(goodsId);
@@ -369,7 +369,7 @@ public class Item implements Serializable {
             && (this.getCreateTime() == null ? other.getCreateTime() == null : this.getCreateTime().equals(other.getCreateTime()))
             && (this.getUpdateTime() == null ? other.getUpdateTime() == null : this.getUpdateTime().equals(other.getUpdateTime()))
             && (this.getItemSn() == null ? other.getItemSn() == null : this.getItemSn().equals(other.getItemSn()))
-            && (this.getCostPirce() == null ? other.getCostPirce() == null : this.getCostPirce().equals(other.getCostPirce()))
+            && (this.getCostPrice() == null ? other.getCostPrice() == null : this.getCostPrice().equals(other.getCostPrice()))
             && (this.getMarketPrice() == null ? other.getMarketPrice() == null : this.getMarketPrice().equals(other.getMarketPrice()))
             && (this.getIsDefault() == null ? other.getIsDefault() == null : this.getIsDefault().equals(other.getIsDefault()))
             && (this.getGoodsId() == null ? other.getGoodsId() == null : this.getGoodsId().equals(other.getGoodsId()))
@@ -398,7 +398,7 @@ public class Item implements Serializable {
         result = prime * result + ((getCreateTime() == null) ? 0 : getCreateTime().hashCode());
         result = prime * result + ((getUpdateTime() == null) ? 0 : getUpdateTime().hashCode());
         result = prime * result + ((getItemSn() == null) ? 0 : getItemSn().hashCode());
-        result = prime * result + ((getCostPirce() == null) ? 0 : getCostPirce().hashCode());
+        result = prime * result + ((getCostPrice() == null) ? 0 : getCostPrice().hashCode());
         result = prime * result + ((getMarketPrice() == null) ? 0 : getMarketPrice().hashCode());
         result = prime * result + ((getIsDefault() == null) ? 0 : getIsDefault().hashCode());
         result = prime * result + ((getGoodsId() == null) ? 0 : getGoodsId().hashCode());

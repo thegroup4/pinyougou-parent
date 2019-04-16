@@ -5,22 +5,20 @@ import cn.itcast.core.dao.good.GoodsDao;
 import cn.itcast.core.dao.good.GoodsDescDao;
 import cn.itcast.core.dao.item.ItemCatDao;
 import cn.itcast.core.dao.item.ItemDao;
+import cn.itcast.core.dao.seckill.SeckillGoodsDao;
 import cn.itcast.core.dao.seller.SellerDao;
 import cn.itcast.core.pojo.good.Goods;
 import cn.itcast.core.pojo.good.GoodsQuery;
 import cn.itcast.core.pojo.item.Item;
 import cn.itcast.core.pojo.item.ItemQuery;
-
+import cn.itcast.core.pojo.seckill.SeckillGoods;
+import cn.itcast.core.pojo.seckill.SeckillGoodsQuery;
 import com.alibaba.dubbo.config.annotation.Service;
 import com.alibaba.fastjson.JSON;
 import com.github.pagehelper.Page;
 import com.github.pagehelper.PageHelper;
 import entity.PageResult;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.solr.core.SolrTemplate;
-import org.springframework.data.solr.core.query.SimpleQuery;
-import org.springframework.data.solr.core.query.SolrDataQuery;
-
 import org.springframework.jms.core.JmsTemplate;
 import org.springframework.jms.core.MessageCreator;
 import org.springframework.transaction.annotation.Transactional;
@@ -30,7 +28,6 @@ import javax.jms.Destination;
 import javax.jms.JMSException;
 import javax.jms.Message;
 import javax.jms.Session;
-import javax.swing.*;
 import java.util.*;
 
 /**
@@ -53,6 +50,8 @@ public class GoodsServiceImpl implements GoodsService {
     private SellerDao sellerDao;
     @Autowired
     private BrandDao brandDao;
+    @Autowired
+    private SeckillGoodsDao seckillGoodsDao;
 
     //添加
     @Override
@@ -248,8 +247,6 @@ public class GoodsServiceImpl implements GoodsService {
 
     }
 
-
-
     @Autowired
     private JmsTemplate jmsTemplate;
     @Autowired
@@ -275,17 +272,16 @@ public class GoodsServiceImpl implements GoodsService {
             //1:更新商品的审核状态
             goodsDao.updateByPrimaryKeySelective(goods);
             //判断是否为审核通过
-            if("1".equals(status)){
+            if ("1".equals(status)) {
 
                 //发消息 目的地
-               jmsTemplate.send(topicPageAndSolrDestination, new MessageCreator() {
-                   @Override
-                   public Message createMessage(Session session) throws JMSException {
-                       //五大类型 TextMessage
-                       return  session.createTextMessage(String.valueOf(id));// null + ""  "null"
-                   }
-               });
-
+                jmsTemplate.send(topicPageAndSolrDestination, new MessageCreator() {
+                    @Override
+                    public Message createMessage(Session session) throws JMSException {
+                        //五大类型 TextMessage
+                        return session.createTextMessage(String.valueOf(id));// null + ""  "null"
+                    }
+                });
 
             }
 
@@ -300,11 +296,9 @@ public class GoodsServiceImpl implements GoodsService {
         //已删除状态
         goods.setIsDelete("1");
 
-
         //JSON.parse 返回值是一个Object类型 一个对象 {k:v}
         //JSON.parseObject 返回值 是一个指定了类型的一个对象  {k:v}
         //JSON.parseArray 返回值 一个指定了类型的集合对象 [{},{}]
-
 
         for (Long id : ids) {
             //1:更新是否删除状态
@@ -315,12 +309,38 @@ public class GoodsServiceImpl implements GoodsService {
                 @Override
                 public Message createMessage(Session session) throws JMSException {
                     //五大类型 TextMessage
-                    return  session.createTextMessage(String.valueOf(id));// null + ""  "null"
+                    return session.createTextMessage(String.valueOf(id));// null + ""  "null"
                 }
             });
 
+        }
+    }
 
+    @Override
+    public List<GoodsVo> findGoodsListBySellerId(String sellerId) {
+
+        GoodsQuery goodsQuery = new GoodsQuery();
+        goodsQuery.createCriteria().andSellerIdEqualTo(sellerId);
+        List<Goods> goodsList = goodsDao.selectByExample(goodsQuery);
+        ArrayList<GoodsVo> goodsVos = new ArrayList<>();
+        GoodsVo goodsVo = null;
+        for (Goods goods : goodsList) {
+
+            SeckillGoodsQuery seckillGoodsQuery = new SeckillGoodsQuery();
+            seckillGoodsQuery.createCriteria().andGoodsIdEqualTo(goods.getId()).andSellerIdEqualTo(sellerId);
+            List<SeckillGoods> seckillGoods = seckillGoodsDao.selectByExample(seckillGoodsQuery);
+
+            if(seckillGoods.size() == 0 ){
+                goodsVo  = new GoodsVo();
+                ItemQuery itemQuery = new ItemQuery();
+                itemQuery.createCriteria().andGoodsIdEqualTo(goods.getId());
+                List<Item> items = itemDao.selectByExample(itemQuery);
+                goodsVo.setGoods(goods);
+                goodsVo.setItemList(items);
+                goodsVos.add(goodsVo);
+            }
 
         }
+        return goodsVos;
     }
 }

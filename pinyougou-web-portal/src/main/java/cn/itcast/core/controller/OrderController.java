@@ -27,7 +27,6 @@ public class OrderController {
             //当前登陆人 买家
             String name = SecurityContextHolder.getContext().getAuthentication().getName();
             order.setUserId(name);
-
             orderService.add(order);
             return new Result(true,"提交订单成功");
         } catch (Exception e) {

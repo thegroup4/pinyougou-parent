@@ -44,6 +44,16 @@ public class Goods implements Serializable {
      */
     private String caption;
 
+    private Integer isSeckillgoods;
+
+    public Integer getIsSeckillgoods() {
+        return isSeckillgoods;
+    }
+
+    public void setIsSeckillgoods(Integer isSeckillgoods) {
+        this.isSeckillgoods = isSeckillgoods;
+    }
+
     /**
      * 一级类目
      */

@@ -17,6 +17,16 @@ public class SeckillGoods implements Serializable {
      */
     private Long itemId;
 
+    public String getItemSpec() {
+        return itemSpec;
+    }
+
+    public void setItemSpec(String itemSpec) {
+        this.itemSpec = itemSpec;
+    }
+
+    private String itemSpec;
+
     /**
      * 标题
      */

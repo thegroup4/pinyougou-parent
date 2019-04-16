@@ -8,13 +8,20 @@ import com.alibaba.dubbo.config.annotation.Service;
 import com.github.pagehelper.Page;
 import com.github.pagehelper.PageHelper;
 import entity.PageResult;
+import entity.Result;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.redis.core.RedisTemplate;
+
+import java.util.List;
 
 @Service
 public class SeckillGoodsServiceImpl implements SeckillGoodsService {
 
     @Autowired
     private SeckillGoodsDao seckillGoodsDao;
+    @Autowired
+    private RedisTemplate<String,Object> redisTemplate;
+
     @Override
     public PageResult search(Integer page, Integer rows, SeckillGoods seckillGoods) {
         PageHelper.startPage(page,rows);
@@ -50,5 +57,21 @@ public class SeckillGoodsServiceImpl implements SeckillGoodsService {
             seckillGoods.setId(id);
             seckillGoodsDao.updateByPrimaryKeySelective(seckillGoods);
         }
+    }
+
+    @Override
+    public List<SeckillGoods> findList() {
+        return seckillGoodsDao.selectByExample(null);
+    }
+
+    @Override
+    public SeckillGoods findOneFromRedis(Long id) {
+        return (SeckillGoods) redisTemplate.boundHashOps("seckillGoods").get(id);
+    }
+
+    @Override
+    public Result submitOrder(Long seckillId) {
+
+        return null;
     }
 }

@@ -1,7 +1,6 @@
 package cn.itcast.core.service;
 
 import cn.itcast.core.pojo.seller.Seller;
-import com.alibaba.dubbo.config.annotation.Reference;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.User;
@@ -29,6 +28,7 @@ public class UserDetailServiceImpl implements UserDetailsService{
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
 
         //根据商家名称 查询商品对象
+
         Seller seller = sellerService.findBySellerId(username);
         //判断是否为null  //判断状态是否为审核通过
         if(null != seller && "1".equals(seller.getStatus())){

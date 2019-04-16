@@ -1,9 +1,9 @@
  //控制层 
-app.controller('goodsController' ,function($scope,$controller,$location,typeTemplateService ,itemCatService,uploadService ,goodsService){
+app.controller('goodsController' ,function($scope,$controller,$location,typeTemplateService ,itemCatService,uploadService ,goodsService,seckillService){
 
 	$controller('baseController',{$scope:$scope});//继承
 
-    //读取列表数据绑定到表单中  
+    //读取列表数据绑定到表单中
 	$scope.findAll=function(){
 		goodsService.findAll().success(
 			function(response){
@@ -12,7 +12,7 @@ app.controller('goodsController' ,function($scope,$controller,$location,typeTemp
 		);
 	}
 
-	//分页
+	//分页e
 	$scope.findPage=function(page,rows){
 		goodsService.findPage(page,rows).success(
 			function(response){
@@ -26,14 +26,10 @@ app.controller('goodsController' ,function($scope,$controller,$location,typeTemp
 	//新增
 	//修改
 	$scope.findOne=function(){
-
-
 		var id = $location.search()['id'];
 		if(null == id){
 			return;
 		}
-
-
 		goodsService.findOne(id).success(//保存商品 GoodsVo  查询并回显 GoodsVo
 			function(response){
 				$scope.entity= response;
@@ -76,9 +72,6 @@ app.controller('goodsController' ,function($scope,$controller,$location,typeTemp
 	$scope.save=function(){
 		// 再添加之前，获得富文本编辑器中的内容。
 		$scope.entity.goodsDesc.introduction=editor.html();
-
-
-
 
 		var serviceObject;//服务层对象
 		if($scope.entity.goods.id!=null){//如果有ID
@@ -279,4 +272,117 @@ app.controller('goodsController' ,function($scope,$controller,$location,typeTemp
 
 		});
 	}
-});	
+
+
+    $scope.findGoodsById = function(id){
+        goodsService.findGoodsById(id).success(function(response){
+        	$scope.seckillgoods = response;
+        });
+    }
+
+
+
+    $scope.findGoodsListBySellerId=function(){
+        goodsService.findGoodsListBySellerId().success(function (response) {
+            $scope.goodsVoList=response;
+        })
+    }
+
+    $scope.saveSeckillGoods=function(){
+		// if($scope.seckillgoods.stockCount<$scope.seckillgoods.num){
+		// 	alert("秒杀商品数量不能大于剩余库存数量！")
+		// 	return;
+		// }
+
+		$scope.start = $scope.startDate+" "+$scope.startTime;
+        $scope.end = $scope.endDate+" "+$scope.endTime;
+
+        seckillService.saveSeckillGoods($scope.start,$scope.end,$scope.goodsVo).success(function(response){
+            alert(response.message);
+        });
+    }
+
+
+
+    $scope.findSckillOrderListBySellerId=function(){
+
+        seckillService.findSckillOrderListBySellerId().success(function(response){
+        	$scope.seckillOrderList = response;
+        });
+    }
+
+    $scope.findSeckillGoodsByGoodsId=function(goodsId){
+
+        seckillService.findSeckillGoodsByGoodsId(goodsId).success(function(response){
+            $scope.seckillGoods = response;
+        });
+    }
+
+
+    $scope.findGoodsVo=function(){
+        var id = $location.search()['id'];
+        if(null == id){
+            return;
+        }
+
+        goodsService.findOne(id).success(function(response){
+            $scope.goodsVo = response;
+        });
+    }
+
+
+    $scope.findSeckillGoodsListBySellerId=function(){
+
+        seckillService.findSeckillGoodsListBySellerId().success(function(response){
+            $scope.seckillgoodsList = response;
+        });
+    }
+
+    $scope.findSeckillGoodsVo=function(){
+
+        var id = $location.search()['id'];
+        if(null == id){
+            return;
+        }
+
+        seckillService.findSeckillGoodsVo(id).success(function(response){
+            alert(response);
+            $scope.goodsVo = response;
+            $scope.startDate = Format(response.startTime,"yyyy-MM-dd");
+            alert($scope.startDate.toString());
+        });
+    }
+
+
+
+
+
+
+
+    function Format(datetime,fmt) {
+        if (parseInt(datetime)==datetime) {
+            if (datetime.length==10) {
+                datetime=parseInt(datetime)*1000;
+            } else if(datetime.length==13) {
+                datetime=parseInt(datetime);
+            }
+        }
+        datetime=new Date(datetime);
+        var o = {
+            "M+" : datetime.getMonth()+1,                 //月份
+            "d+" : datetime.getDate(),                    //日
+            "h+" : datetime.getHours(),                   //小时
+            "m+" : datetime.getMinutes(),                 //分
+            "s+" : datetime.getSeconds(),                 //秒
+            "q+" : Math.floor((datetime.getMonth()+3)/3), //季度
+            "S"  : datetime.getMilliseconds()             //毫秒
+        };
+        if(/(y+)/.test(fmt))
+            fmt=fmt.replace(RegExp.$1, (datetime.getFullYear()+"").substr(4 - RegExp.$1.length));
+        for(var k in o)
+            if(new RegExp("("+ k +")").test(fmt))
+                fmt = fmt.replace(RegExp.$1, (RegExp.$1.length==1) ? (o[k]) : (("00"+ o[k]).substr((""+ o[k]).length)));
+        return fmt;
+    }
+
+});

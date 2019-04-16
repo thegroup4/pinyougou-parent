@@ -3,6 +3,7 @@ package cn.itcast.core.dao.seckill;
 import cn.itcast.core.pojo.seckill.SeckillOrder;
 import cn.itcast.core.pojo.seckill.SeckillOrderQuery;
 import java.util.List;
+
 import org.apache.ibatis.annotations.Param;
 
 public interface SeckillOrderDao {

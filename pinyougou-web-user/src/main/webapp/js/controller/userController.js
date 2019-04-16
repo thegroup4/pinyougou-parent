@@ -1,5 +1,5 @@
  //控制层 
-app.controller('userController' ,function($scope,$controller   ,userService){	
+app.controller('userController' ,function($scope,$controller,$http   ,userService){
 	$scope.entity = {};
 	//注册用户
 	$scope.reg=function(){
@@ -35,5 +35,44 @@ app.controller('userController' ,function($scope,$controller   ,userService){
 			}
 		);		
 	}
-	
+
+    $scope.findSeckillOrderByUserId=function(){
+
+        userService.findSeckillOrderByUserId( ).success(
+            function(response){
+                $scope.seckillOrderList = response;
+            }
+        );
+    }
+
+    $scope.findSeckillOrderByUserId=function(){
+        $http.get('http://localhost:9105/seckillOrder/findSeckillOrderByUserId.do',{'withCredentials':true} ).success(function(response){
+                $scope.seckillOrderList = response;
+            }
+        );
+
+        // $http({
+        //     method: 'GET',
+        //     url: 'http://localhost:9105/seckillOrder/findSeckillOrderByUserId.do',
+        //     headers:{'Content-Type': 'application/json',
+        //         "Access-Control-Allow-Origin": "*",
+        //         'Accept': 'application/json'},
+			// 	'withCredentials':true
+        //
+        // }).then(function successCallback(response) {
+        //     alert(1);
+        //     $scope.seckillOrderList = response;
+        // }, function errorCallback(response) {
+        //     // 请求失败执行代码
+        //     console.log("--------2");
+        // });
+
+
+
+
+    }
+
+
+
+
 });	
